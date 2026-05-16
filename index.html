@@ -1,0 +1,1364 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Block Gems</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    /* Prevent FOUC for overlays */
+    .overlay {
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+
+    .overlay.active {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- LOADING SCREEN --- */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      transition: opacity 0.5s ease-out, visibility 0.5s;
+    }
+
+    .loading-atom {
+      width: 48px;
+      height: 48px;
+      background: #f8fafc;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 4px;
+      filter: drop-shadow(0 0 10px #f8fafc);
+      margin-bottom: 24px;
+      animation: atom-pulse 2s infinite ease-in-out;
+      will-change: transform, filter;
+    }
+
+    @keyframes atom-pulse {
+      0% {
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(0 0 8px #f8fafc);
+      }
+
+      50% {
+        transform: scale(1.15) rotate(180deg);
+        filter: drop-shadow(0 0 20px #f8fafc);
+      }
+
+      100% {
+        transform: scale(1) rotate(360deg);
+        filter: drop-shadow(0 0 8px #f8fafc);
+      }
+    }
+
+    .loading-bar-bg {
+      width: 200px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .loading-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      box-shadow: 0 0 10px #3b82f6;
+      /* Removed CSS transition to use JS interpolation for maximum smoothness */
+    }
+
+    .loading-text {
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+  </style>
+
+<script type="module" crossorigin src="./assets/index-Cai5F5zq.js"></script>
+<link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-jpDsebLB.js">
+<link rel="modulepreload" crossorigin href="./assets/phaser-Bc64RUsP.js">
+<link rel="stylesheet" crossorigin href="./assets/index-DxyEiJ4m.css">
+
+<body class="bg-black text-white font-['Plus_Jakarta_Sans'] overflow-hidden select-none">
+  <!-- SVG SPRITES SYSTEM -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <!-- Arrow/Chevron -->
+    <symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
+      stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </symbol>
+    <!-- Trophy/Score -->
+    <symbol id="icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+      <path d="M4 22h16"></path>
+      <path d="M10 14.66V17c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-2.34"></path>
+      <path d="M18 4H6v7a6 6 0 0 0 12 0V4Z"></path>
+    </symbol>
+    <!-- Rows -->
+    <symbol id="icon-rows" viewBox="0 0 24 24" fill="currentColor">
+      <rect x="3" y="15" width="18" height="6" rx="1" ry="1"></rect>
+      <rect x="3" y="6" width="18" height="6" rx="1" ry="1" opacity="0.4"></rect>
+    </symbol>
+    <!-- Combo/Flame -->
+    <symbol id="icon-flame" viewBox="0 0 24 24" fill="currentColor">
+      <path
+        d="M8.5,1C8.5,1,9.5,4,7,7C4.5,10,4,13,5,16C6,19,9,22,12,22C15,22,18,19.5,19,16C20,12.5,18,9,14,7C14,7,15,10,14,12C13,14,11.5,15,9.5,14C7.5,13,8.5,10,8.5,10L8.5,1Z">
+      </path>
+    </symbol>
+    <!-- Special Clears -->
+    <symbol id="icon-grid" viewBox="0 0 24 24" fill="currentColor">
+      <path
+        d="M19,3H5C3.89,3,3,3.9,3,5V19C3,20.1,3.89,21,5,21H19C20.1,21,21,20.1,21,19V5C21,3.9,20.1,3,19,3M19,19H5V5H19V19M17,11H7V13H17V11M17,7H7V9H17V7M17,15H7V17H17V15Z">
+      </path>
+    </symbol>
+    <!-- Gems -->
+    <symbol id="icon-gem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 3h12l4 6-10 12L2 9z"></path>
+      <path d="M11 3l-4 6 5 12 5-12-4-6"></path>
+      <path d="M2 9h20"></path>
+    </symbol>
+    <!-- Menu -->
+    <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+      stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </symbol>
+    <!-- Avatar -->
+    <symbol id="icon-avatar" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+      <path fill-rule="evenodd"
+        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z">
+      </path>
+    </symbol>
+    <!-- Edit -->
+    <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+      stroke-linejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+    </symbol>
+    <!-- Copy -->
+    <symbol id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+      stroke-linejoin="round">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+    </symbol>
+    <!-- Eye Off -->
+    <symbol id="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path
+        d="M9.88 9.88L3 3m18.12 18.12L14.12 14.12M12 12l-2.12-2.12M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61m-5.46-5.46L12 12">
+      </path>
+    </symbol>
+    <!-- Eye On -->
+    <symbol id="icon-eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path d="M1 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+      <circle cx="12" cy="12" r="3"></circle>
+    </symbol>
+    <!-- Rotate -->
+    <symbol id="icon-rotate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+      <polyline points="21 3 21 8 16 8" />
+    </symbol>
+    <!-- Trash -->
+    <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 6 5 6 21 6"></polyline>
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    </symbol>
+
+    <!-- [NEW] Refill Icon -->
+    <symbol id="icon-refill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path d="M23 4v6h-6"></path>
+      <path d="M1 20v-6h6"></path>
+      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+    </symbol>
+
+    <!-- [NEW] Hint Icon -->
+    <symbol id="icon-hint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+      stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </symbol>
+    <!-- [NEW] Palette Icon -->
+    <symbol id="icon-palette" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+      <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+      <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+      <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+      <path
+        d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.92 0 1.5-.58 1.5-1.5 0-.43-.17-.83-.44-1.14-.24-.28-.36-.64-.36-1.02 0-.81.65-1.48 1.45-1.48h1.85c2.76 0 5-2.24 5-5 0-5.52-4.48-10-10-10Z">
+      </path>
+    </symbol>
+    <!-- [NEW] Level Tint Icon -->
+    <symbol id="icon-level-tint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M12 2a10 10 0 0 1 10 10M12 2a10 10 0 0 0-10 10"></path>
+      <path d="M12 22a10 10 0 0 0 10-10M12 22a10 10 0 0 1-10-10"></path>
+      <path d="M8 12a4 4 0 1 1 8 0 4 4 0 0 1-8 0"></path>
+    </symbol>
+  </svg>
+
+  <div id="loading-screen">
+    <div class="loading-atom"></div>
+    <div class="loading-bar-bg">
+      <div id="loading-fill" class="loading-bar-fill"></div>
+    </div>
+    <div id="loading-status" class="loading-text">LOADING DATA... 0%</div>
+  </div>
+
+  <!-- Game Container for Phaser Canvas -->
+  <div id="game-container"></div>
+
+
+  <div id="app-root">
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- HTML UI Overlay Layer -->
+    <div id="ui-layer">
+      <!-- Block Gems Timer Bar (Hidden by default) -->
+      <div id="timer-hud" class="hidden absolute z-100 origin-top flex flex-col items-center">
+        <!-- Game Mode Name -->
+        <div id="hud-game-mode-name" class="font-black uppercase tracking-[0.25em] mb-1 text-white text-[10px]"></div>
+        <div id="timer-bar"
+          class="hidden bg-black/85 backdrop-blur-xl rounded-lg p-1.5 px-3 border border-white/10 shadow-2xl flex items-center gap-2 w-full">
+          <span class="text-[9px] font-black text-cyan-400 uppercase whitespace-nowrap">Block Gems</span>
+          <div class="h-1.5 flex-grow bg-slate-900/60 rounded-full overflow-hidden border border-white/5 relative">
+            <div id="block-gems-timer-fill"
+              class="h-full w-0 bg-gradient-to-r from-cyan-400 to-blue-500 shadow-[0_0_10px_rgba(34,211,238,0.5)]">
+            </div>
+            <div id="block-gems-timer-text-container"
+              class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <span id="block-gems-timer-text"
+                class="text-[7px] font-black text-white/90 leading-none uppercase drop-shadow-md"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fever Mode Bar (Only for Classic) -->
+        <div id="hud-fever-bar-wrapper"
+          class="hidden bg-black/85 backdrop-blur-xl rounded-lg p-1.5 px-3 border border-white/10 shadow-2xl flex items-center gap-2 w-full">
+          <span id="hud-fever-label"
+            class="text-[9px] font-black text-cyan-400 uppercase whitespace-nowrap tracking-wider">Fever</span>
+          <div class="h-2.5 flex-grow bg-slate-900/60 rounded-full overflow-hidden border border-white/5 relative">
+            <div id="fever-bar-fill"
+              class="h-full w-full origin-left bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)] transition-all duration-200"
+              style="transform: scaleX(0)">
+            </div>
+            <div id="fever-bar-text"
+              class="absolute inset-0 flex items-center justify-center pointer-events-none text-[7.5px] font-black text-white uppercase">
+              0/100 - x2
+            </div>
+          </div>
+        </div>
+
+        <!-- Funny text when Fever Core not active -->
+        <div id="hud-fever-funny-text"
+          class="hidden text-[9px] font-black text-slate-500/80 uppercase whitespace-nowrap tracking-[0.15em] mt-2 text-center animate-pulse">
+          Chill nào!
+        </div>
+      </div>
+
+      <!-- Adventure HUD (Interactive & Expandable) -->
+      <div id="adventure-progress-hud"
+        class="hidden absolute transition-all duration-300 z-[90] cursor-pointer pointer-events-auto"
+        title="Tap to see goals">
+        <!-- Main Bar (Always Visible) -->
+        <div id="adv-hud-main"
+          class="bg-black/85 backdrop-blur-xl rounded-t-2xl rounded-b-lg p-2 px-3 border border-white/10 flex items-center gap-3 shadow-lg hover:border-blue-500/30 transition-colors">
+          <div id="adv-stage-label"
+            class="text-[10px] text-gray-200 font-black uppercase tracking-wider whitespace-nowrap">
+            STAGE 001/100
+          </div>
+          <!-- Progress Bar in HUD (One-Line Layout) -->
+          <div class="flex-1 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+            <div id="adv-hud-progress-bar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%;">
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div id="adv-hud-percent" class="text-[10px] font-black text-blue-400">0%</div>
+            <div id="adv-expand-icon" class="text-white/30 transition-transform duration-300">
+              <svg width="12" height="12">
+                <use xlink:href="#icon-chevron-down"></use>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expandable Goals Detail -->
+        <div id="adv-hud-goals"
+          class="hidden bg-black/85 backdrop-blur-xl rounded-b-2xl p-4 border-x border-b border-white/10 mt-[-10px] pt-[20px] shadow-2xl space-y-3 pointer-events-none">
+          <!-- Goal 1: Score -->
+          <div id="hud-goal-score-row" class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 text-yellow-400">
+                <svg width="16" height="16">
+                  <use xlink:href="#icon-trophy"></use>
+                </svg>
+              </div>
+              <span class="text-[10px] text-gray-400 font-bold uppercase">Score</span>
+            </div>
+            <span id="hud-goal-score" class="text-[11px] font-black font-mono">0 / 0</span>
+          </div>
+          <!-- Goal 2: Rows -->
+          <div id="hud-goal-rows-row" class="flex items-center justify-between" style="display: none;">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 text-green-400">
+                <svg width="16" height="16">
+                  <use xlink:href="#icon-rows"></use>
+                </svg>
+              </div>
+              <span class="text-[10px] text-gray-400 font-bold uppercase">Rows</span>
+            </div>
+            <span id="hud-goal-rows" class="text-[11px] font-black font-mono">0 / 0</span>
+          </div>
+
+          <!-- Goal 4: Specific Gems (Dynamic Container) -->
+          <div id="hud-gem-goals-list" class="space-y-3 pt-1 border-t border-white/5">
+            <!-- Dynamic gem goals will be injected here -->
+          </div>
+          <!-- Goal 3: Combo (Optional row) -->
+          <div id="hud-combo-row" class="flex items-center justify-between" style="display: none;">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 text-red-500">
+                <svg width="18" height="18">
+                  <use xlink:href="#icon-flame"></use>
+                </svg>
+              </div>
+              <span class="text-[10px] text-gray-400 font-bold uppercase">Combos</span>
+            </div>
+            <span id="hud-goal-combo" class="text-[11px] font-black font-mono">0 / 1</span>
+          </div>
+          <!-- Goal 4: Multi-Line Clears (Optional row) -->
+          <div id="hud-clear-row" class="flex items-center justify-between" style="display: none;">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 text-cyan-400">
+                <svg width="18" height="18">
+                  <use xlink:href="#icon-grid"></use>
+                </svg>
+              </div>
+              <span class="text-[10px] text-gray-400 font-bold uppercase">Special</span>
+            </div>
+            <span id="hud-goal-clear" class="text-[11px] font-black font-mono">0 / 0</span>
+          </div>
+          <!-- Goal 5: Gems (New) -->
+          <div id="hud-gem-row" class="flex items-center justify-between" style="display: none;">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 text-yellow-400">
+                <svg width="18" height="18">
+                  <use xlink:href="#icon-gem"></use>
+                </svg>
+              </div>
+              <span class="text-[10px] text-gray-400 font-bold uppercase">Gems</span>
+            </div>
+            <span id="hud-goal-gem" class="text-[11px] font-black font-mono">0 / 0</span>
+          </div>
+        </div>
+      </div>
+      <!-- Gem HUD (Top Right of Board) -->
+      <div id="gem-hud" class="hidden absolute z-[85] hud-vertical-container"></div>
+
+      <!-- Pocket HUD (Top Left of Board) -->
+      <div id="pocket-hud" class="hidden absolute z-[85] hud-vertical-container"></div>
+
+      <!-- Palette Card Slots (Below Pocket HUD) -->
+      <div id="card-slots-container" class="hidden absolute z-[85] hud-vertical-container pointer-events-none">
+        <div id="card-slot-0" class="card-slot pointer-events-auto cursor-pointer"></div>
+        <div id="card-slot-1" class="card-slot pointer-events-auto cursor-pointer"></div>
+      </div>
+
+      <!-- Nút Menu trên Board -->
+      <div id="ui-board-header">
+        <button id="btn-menu" class="btn-icon">
+          <svg width="18" height="18">
+            <use xlink:href="#icon-menu"></use>
+          </svg>
+        </button>
+
+        <div id="next-box" class="horizontal-next"></div>
+
+        <!-- [NEW] Patch Boosters HUD - Dời sang bên phải để cân đối -->
+        <div id="patch-booster-hud"
+          class="hidden flex items-center gap-2.5 bg-black/50 backdrop-blur-lg px-4 py-1.5 rounded-full border border-white/10 shadow-xl">
+          <div id="patch-hud-rot-group" class="flex items-center gap-1.5 group cursor-pointer">
+            <div class="text-cyan-400 opacity-80 group-hover:opacity-100 transition-opacity">
+              <svg width="15" height="15">
+                <use xlink:href="#icon-rotate"></use>
+              </svg>
+            </div>
+            <span id="patch-hud-rot-val" class="font-black text-[12px] text-white">0</span>
+          </div>
+          <div class="w-[1px] h-3 bg-white/10"></div>
+          <div id="patch-hud-trash-group" class="flex items-center gap-1.5 group cursor-pointer">
+            <div class="text-rose-500 opacity-80 group-hover:opacity-100 transition-opacity">
+              <svg width="15" height="15">
+                <use xlink:href="#icon-trash"></use>
+              </svg>
+            </div>
+            <span id="patch-hud-trash-val" class="font-black text-[12px] text-white">0</span>
+          </div>
+          <div class="w-[1px] h-3 bg-white/10"></div>
+          <div id="patch-hud-refill-group" class="flex items-center gap-1.5 group cursor-pointer">
+            <div class="text-amber-500 opacity-80 group-hover:opacity-100 transition-opacity">
+              <svg width="15" height="15">
+                <use xlink:href="#icon-refill"></use>
+              </svg>
+            </div>
+            <span id="patch-hud-refill-val" class="font-black text-[12px] text-white">0</span>
+          </div>
+          <div class="w-[1px] h-3 bg-white/10"></div>
+          <div id="patch-hud-hint-group" class="flex items-center gap-1.5 group cursor-pointer">
+            <div class="text-indigo-400 opacity-80 group-hover:opacity-100 transition-opacity">
+              <svg width="16" height="16">
+                <use xlink:href="#icon-hint"></use>
+              </svg>
+            </div>
+            <span id="patch-hud-hint-val" class="font-black text-[12px] text-white">0</span>
+          </div>
+        </div>
+
+        <button id="btn-leaderboard" class="btn-icon">
+          <svg width="20" height="20" style="color: #facc15;">
+            <use xlink:href="#icon-trophy"></use>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Hàng TRÊN CÙNG -->
+
+      <!-- Cột DƯỚI (Mới) -->
+      <div id="ui-bottom">
+        <div class="neon-box stats-panel-horizontal">
+          <div class="stat-group">
+            <p class="stat-label">Score</p>
+            <p id="score-val" class="stat-value text-white">0</p>
+          </div>
+          <div class="vertical-divider"></div>
+          <div class="stat-group">
+            <p class="stat-label">Level</p>
+            <p id="level-val" class="stat-value text-yellow">0</p>
+          </div>
+          <div class="vertical-divider"></div>
+          <div class="stat-group">
+            <p class="stat-label">Rows</p>
+            <p id="rows-val" class="stat-value text-green">0</p>
+          </div>
+          <div class="vertical-divider"></div>
+          <div class="stat-group">
+            <p class="stat-label text-[10px]">Drop</p>
+            <p id="drop-delay-val" class="stat-value text-cyan-300 text-sm">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cột GIỮA -->
+      <div id="ui-center">
+        <div id="start-overlay" class="overlay active">
+          <!-- Daily Gift Box (Moved inside start-overlay to hide during Auth) -->
+          <div id="gift-menu-container" class="gift-menu-container">
+            <img src="./assets/images/gift_box.png" class="gift-menu-icon" alt="Gift">
+            <span id="gift-menu-status" class="gift-menu-label">--:--:--</span>
+          </div>
+
+          <!-- Gift Claim Animation Overlay (Fixed center) -->
+          <div id="gift-claim-overlay" class="gift-claim-sequence">
+            <div class="gift-glow-effect"></div>
+            <div id="gift-anim-box" class="gift-anim-box">
+              <img src="./assets/images/gift_box.png" class="gift-anim-icon" alt="Gift">
+            </div>
+          </div>
+
+          <!-- Main Content Wrapper to shift everything down -->
+          <div class="flex flex-col items-center w-full translate-y-[50px]">
+            <h1 class="game-title">BLOCK GEMS</h1>
+            <p class="subtitle">Smart Evolution</p>
+            <button id="btn-start" class="btn-primary py-3 px-8 mb-1" style="width: fit-content;">PLAY NOW</button>
+            <!-- Mode selector -->
+            <div id="mode-selector" class="grid grid-cols-2 gap-3 w-full px-4 mt-[10px] mb-3 max-w-[320px]">
+              <button id="btn-mode-block-brick" class="btn-mode btn-mode-classic">
+                BLOCK BRICK
+              </button>
+              <button id="btn-mode-adventure" class="btn-mode btn-mode-adventure">
+                ADVENTURE
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 w-full px-4 mb-6 max-w-[320px]">
+              <button id="btn-mode-bb1" class="btn-mode btn-mode-drone">BLOCK DRONE</button>
+              <button id="btn-mode-bb2" class="btn-mode btn-mode-gems2">BLOCK GEMS 2</button>
+              <button id="btn-mode-bb3" class="btn-mode btn-mode-patch">BLOCK PATCH</button>
+              <button id="btn-mode-bb4" class="btn-mode btn-mode-gems4">BLOCK GEMS 4</button>
+              <button id="btn-mode-bb5" class="btn-mode btn-mode-gems5">BLOCK GEMS 5</button>
+              <button id="btn-mode-bb6" class="btn-mode btn-mode-gems6">BLOCK GEMS 6</button>
+            </div>
+          </div>
+          <button id="btn-how-to-play" class="btn-outline"
+            style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: auto; padding: 10px 32px; white-space: nowrap; min-width: 140px;">HOW
+            TO PLAY</button>
+          <div id="combo-text-container"></div>
+        </div>
+
+        <!-- Home Auth Gate Popup -->
+        <div id="home-screen" class="overlay">
+          <div class="modal-box neon-box">
+            <div class="flex flex-col items-center mt-6">
+              <div class="w-16 h-16 text-blue-500 mb-6 filter drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="2" width="16" height="16" rx="3" fill="currentColor" opacity="0.9" />
+                  <rect x="22" y="2" width="16" height="16" rx="3" fill="currentColor" opacity="0.6" />
+                  <rect x="2" y="22" width="16" height="16" rx="3" fill="currentColor" opacity="0.6" />
+                  <rect x="22" y="22" width="16" height="16" rx="3" fill="currentColor" opacity="0.9" />
+                </svg>
+              </div>
+              <h1
+                class="text-3xl font-black tracking-[0.2em] bg-gradient-to-br from-blue-400 to-purple-500 bg-clip-text text-transparent uppercase leading-none text-center">
+                BLOCK GEMS</h1>
+              <p class="text-[10px] font-bold tracking-[0.3em] text-slate-500 uppercase mt-4 text-center">Smart
+                Evolution</p>
+            </div>
+
+            <div class="w-full flex flex-col gap-5 px-4">
+              <button id="btn-home-login" class="btn-ui btn-blue-neon !py-4 rounded-xl">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="18" height="18"
+                  class="shrink-0">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                  <polyline points="10 17 15 12 10 7" />
+                  <line x1="15" y1="12" x2="3" y2="12" />
+                </svg>
+                <span class="whitespace-nowrap">SIGN IN / SIGN UP</span>
+              </button>
+
+              <button id="btn-home-guest" class="btn-ui btn-red-dim !py-4 rounded-xl">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="18" height="18"
+                  class="shrink-0">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span class="whitespace-nowrap">PLAY AS GUEST</span>
+              </button>
+            </div>
+
+            <div
+              class="w-full flex items-center gap-2 px-1 py-4 bg-transparent border-none opacity-60 hover:opacity-100 transition-opacity mb-2">
+              <span class="text-[9px] font-black text-slate-500 uppercase tracking-tighter shrink-0">UID</span>
+              <span id="home-uid-display"
+                class="flex-1 font-mono text-[11px] text-slate-300 truncate tracking-tight cursor-pointer"
+                title="Your unique ID">--------</span>
+              <button id="btn-home-copy-uid"
+                class="p-1.5 text-slate-500 hover:text-white transition-colors cursor-pointer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menu & Auth overlays -->
+        <div id="menu-modal" class="overlay">
+          <div id="pause-box" class="modal-box neon-box">
+            <h2 class="text-white text-xl font-bold mb-4 shrink-0 uppercase tracking-widest text-center">MENU</h2>
+            <div class="flex flex-col gap-2.5 w-full flex-grow overflow-y-auto custom-scrollbar px-1">
+              <div id="user-info-brief"
+                class="bg-blue-500/5 border border-white/5 rounded-xl mb-2 flex flex-col w-full overflow-hidden">
+                <div class="pt-4 px-4 pb-3 flex flex-col gap-3">
+                  <div class="flex items-center gap-4 w-full px-1">
+                    <div id="btn-open-profile"
+                      class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0 border border-blue-500/20 cursor-pointer hover:bg-blue-500/20 transition-all overflow-hidden relative">
+                      <img id="menu-avatar-img" src="" class="w-full h-full object-cover hidden">
+                      <div id="menu-avatar-svg" class="w-full h-full flex items-center justify-center"><svg width="32"
+                          height="32">
+                          <use xlink:href="#icon-avatar"></use>
+                        </svg></div>
+                    </div>
+                    <div class="flex-1 flex flex-col items-start leading-tight justify-center min-w-0">
+                      <div class="flex items-center justify-between w-full gap-2">
+                        <span id="menu-display-name" class="text-[13px] text-white font-black truncate">Guest
+                          Player</span>
+                        <button id="btn-edit-name"
+                          class="p-1 hover:bg-white/10 rounded-md transition-colors cursor-pointer shrink-0"><svg
+                            width="14" height="14" class="text-blue-400 opacity-60">
+                            <use xlink:href="#icon-edit"></use>
+                          </svg></button>
+                      </div>
+                      <div class="flex flex-col gap-0.5 mt-0.5">
+                        <span id="menu-user-level"
+                          class="text-[9px] text-yellow font-black uppercase tracking-[0.2em]">Level 1</span>
+                        <span id="menu-id-username"
+                          class="text-[9px] text-blue-400 font-bold opacity-70 truncate"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex flex-col gap-2 mt-1 border-t border-white/5 pt-3">
+                    <div class="flex justify-between items-end px-0.5"><span id="menu-xp-text"
+                        class="text-[9px] text-blue-400 font-bold tracking-wider">XP: 250 / 800</span>
+                      <div class="flex flex-col items-end gap-1">
+                        <div class="flex items-center gap-1">
+                          <span class="currency-icon coin-icon">B</span>
+                          <span id="menu-coins-val" class="text-[10px] text-yellow font-black">0</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                          <span class="currency-icon bcoin-icon">B</span>
+                          <span id="menu-bcoins-val" class="text-[10px] text-cyan-400 font-black">0</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="w-full h-2.5 bg-black/40 rounded-full overflow-hidden border border-white/5">
+                      <div id="menu-level-progress"
+                        class="h-full bg-gradient-to-r from-blue-600 to-blue-400 transition-all duration-700"
+                        style="width: 30%;"></div>
+                    </div>
+                  </div>
+                </div>
+                <div id="auth-buttons-row" class="flex border-t border-white/5">
+                  <button id="btn-pause-register"
+                    class="flex-1 py-3 text-[10px] font-black tracking-widest bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 uppercase cursor-pointer border-r border-white/5">SIGN
+                    UP</button>
+                  <button id="btn-pause-login"
+                    class="flex-1 py-3 text-[10px] font-black tracking-widest bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20 uppercase cursor-pointer">LOG
+                    IN</button>
+                  <button id="btn-pause-logout"
+                    class="hidden flex-1 py-3 text-[10px] font-black tracking-widest bg-red-500/10 text-red-500 hover:bg-red-500/20 uppercase cursor-pointer">LOGOUT</button>
+                </div>
+              </div>
+              <button id="btn-resume" class="btn-ui btn-blue-neon !py-3.5 mb-1 shrink-0">RESUME</button>
+              <button id="btn-give-up" class="hidden btn-ui btn-red-dim !py-3.5 mb-1 shrink-0">GIVE UP</button>
+              <button id="btn-shop-menu" class="btn-ui btn-orange-neon !py-3.5 mb-1 shrink-0">SHOP</button>
+              <button id="btn-quests-menu" class="btn-ui btn-blue-alt-neon !py-3.5 mb-1 shrink-0">MISSIONS</button>
+              <button id="btn-settings" class="btn-ui btn-green-neon !py-3.5 mb-1 shrink-0">OPTIONS</button>
+              <button id="btn-quit" class="btn-ui btn-red-dim !py-3.5 shrink-0">QUIT GAME</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="auth-modal" class="overlay">
+          <!-- Login View -->
+          <div id="login-box" class="modal-box neon-box">
+            <h2 class="text-white text-xl font-bold mb-6 shrink-0 uppercase tracking-widest text-center">LOG IN</h2>
+            <div class="flex flex-col gap-4 w-full flex-grow overflow-y-auto custom-scrollbar px-2">
+              <div class="flex flex-col gap-1.5"><label
+                  class="text-[9px] text-gray-500 font-black uppercase tracking-widest pl-1">Username or
+                  Email</label><input type="text" id="login-username" placeholder="Username or Email"
+                  class="bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-blue-500 outline-none w-full">
+              </div>
+              <div class="flex flex-col gap-1.5"><label
+                  class="text-[9px] text-gray-500 font-black uppercase tracking-widest pl-1">Password</label>
+                <div class="relative w-full"><input type="password" id="login-password" placeholder="Password"
+                    class="bg-black/40 border border-white/10 rounded-lg p-3 pr-10 text-sm text-white focus:border-blue-500 outline-none w-full"><button
+                    id="btn-toggle-login-pass"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-400 p-1"><svg
+                      width="16" height="16" class="pass-eye-off">
+                      <use xlink:href="#icon-eye-off"></use>
+                    </svg><svg width="16" height="16" class="pass-eye-on hidden">
+                      <use xlink:href="#icon-eye-on"></use>
+                    </svg></button></div>
+              </div>
+              <div class="text-right -mt-2"><button id="btn-show-forgot"
+                  class="text-[9px] text-gray-500 hover:text-blue-400 font-bold uppercase tracking-wider transition-colors">Forgot
+                  Password?</button></div>
+              <button id="btn-do-login" class="btn-primary w-full py-4 mt-2 mb-2">SIGN IN</button>
+              <div class="flex items-center gap-2 my-1 opacity-50">
+                <div class="h-[1px] bg-white/20 flex-1"></div><span
+                  class="text-[10px] text-gray-400 uppercase">OR</span>
+                <div class="h-[1px] bg-white/20 flex-1"></div>
+              </div>
+              <button id="btn-login-google"
+                class="btn-ui btn-blue-neon w-full py-0 group relative overflow-hidden flex items-center justify-center h-12 p-0 mb-4">
+                <div class="flex items-center justify-center gap-3 w-full h-full relative z-10"><img
+                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                    class="w-4 h-4 transition-transform group-hover:scale-110 shrink-0" alt="Google"><span
+                    class="text-[12px] font-black tracking-wider text-white">SIGN IN WITH GOOGLE</span></div>
+              </button>
+              <div class="text-center mb-4"><span class="text-xs text-gray-400">Don't have an account?</span><button
+                  id="btn-switch-to-register"
+                  class="text-xs text-blue-400 font-bold ml-1 cursor-pointer hover:text-blue-300 underline">Register
+                  Now</button></div>
+            </div>
+            <button id="btn-close-auth" class="btn-ui w-full mt-4 shrink-0">CLOSE</button>
+          </div>
+
+          <!-- Forgot Password View -->
+          <div id="forgot-box" class="modal-box neon-box hidden">
+            <h2 class="text-white text-xl font-bold mb-6 shrink-0 uppercase tracking-widest text-center">RESET PASSWORD
+            </h2>
+            <div class="flex flex-col gap-6 w-full flex-grow overflow-y-auto custom-scrollbar px-2">
+              <p class="text-[11px] text-gray-400 leading-relaxed text-center px-4">Enter the email associated with your
+                account and we'll send a reset link.</p>
+              <div class="flex flex-col gap-1.5"><label
+                  class="text-[9px] text-gray-500 font-black uppercase tracking-widest pl-1">Email Address</label><input
+                  type="email" id="forgot-email" placeholder="your@email.com"
+                  class="bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-blue-500 outline-none w-full">
+              </div>
+              <button id="btn-do-reset-pass" class="btn-primary w-full py-4 mt-2">SEND RESET LINK</button>
+              <div class="text-center mt-4"><button id="btn-forgot-to-login"
+                  class="text-xs text-blue-400 font-bold cursor-pointer hover:text-blue-300 uppercase tracking-widest underline">Back
+                  to Login</button></div>
+            </div>
+            <button id="btn-close-forgot" class="btn-ui w-full mt-4 shrink-0">CLOSE</button>
+          </div>
+
+          <!-- Register View -->
+          <div id="register-box" class="modal-box neon-box hidden">
+            <h2 class="text-white text-xl font-bold mb-6 shrink-0 uppercase tracking-widest text-center">CREATE ACCOUNT
+            </h2>
+            <div class="flex flex-col gap-3.5 w-full flex-grow overflow-y-auto custom-scrollbar px-2">
+              <div class="flex flex-col gap-1">
+                <label class="text-[9px] text-gray-500 font-black uppercase tracking-widest pl-1">Display Name</label>
+                <input type="text" id="reg-display-name" placeholder="Max 16 chars" maxlength="16"
+                  class="bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-blue-500 outline-none w-full">
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-[9px] text-gray-500 font-black uppercase tracking-widest pl-1">Username (UID)</label>
+                <input type="text" id="reg-username" placeholder="Unique ID"
+                  class="bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-blue-500 outline-none w-full">
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-[9px] text-gray-500 font-black uppercase tracking-widest pl-1">Email Address</label>
+                <input type="email" id="reg-email" placeholder="your@email.com" required
+                  class="bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-blue-500 outline-none w-full">
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-[9px] text-gray-500 font-black uppercase tracking-widest pl-1">Password</label>
+                <div class="relative w-full">
+                  <input type="password" id="reg-password" placeholder="Min 6 chars"
+                    class="bg-black/40 border border-white/10 rounded-lg p-3 pr-10 text-sm text-white focus:border-blue-500 outline-none w-full">
+                  <button id="btn-toggle-reg-pass"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-400 p-1"><svg
+                      width="16" height="16" class="pass-eye-off">
+                      <use xlink:href="#icon-eye-off"></use>
+                    </svg><svg width="16" height="16" class="pass-eye-on hidden">
+                      <use xlink:href="#icon-eye-on"></use>
+                    </svg></button>
+                </div>
+              </div>
+              <div class="flex items-start gap-2 mt-2">
+                <input type="checkbox" id="reg-tos-agree" class="mt-1 cursor-pointer">
+                <label for="reg-tos-agree" class="text-[10px] text-gray-400 leading-tight cursor-pointer">I agree to the
+                  <button id="btn-open-tos" class="text-blue-400 underline cursor-pointer">Terms of
+                    Service</button></label>
+              </div>
+              <button id="btn-do-register" class="btn-primary w-full py-4 mt-2">SIGN UP</button>
+              <div class="text-center mt-4 mb-4">
+                <span class="text-xs text-gray-400">Already have an account?</span>
+                <button id="btn-switch-to-login"
+                  class="text-xs text-blue-400 font-bold ml-1 cursor-pointer hover:text-blue-300 underline">Login
+                  Now</button>
+              </div>
+            </div>
+            <button id="btn-close-reg" class="btn-ui w-full mt-4 shrink-0">CLOSE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlays (Moved outside ui-center for direct board alignment) -->
+    <div id="stage-clear-overlay" class="overlay">
+      <div class="modal-box neon-box text-center w-[24rem] py-10 px-7 border-amber-500/50">
+        <h2 class="text-yellow text-2xl font-black mb-1 uppercase tracking-widest">STAGE CLEAR!</h2>
+        <p id="stage-clear-num" class="text-amber-300 text-sm font-bold mb-4"></p>
+        <div id="stage-clear-stats" class="w-full text-left mb-6 space-y-1"></div>
+        <div class="flex gap-2 w-full">
+          <button id="btn-stage-menu" class="btn-ui btn-red-dim flex-1">MENU</button>
+          <button id="btn-next-stage" class="btn-ui btn-orange-neon flex-1">NEXT STAGE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Patch No-Moves Popup (compact toast before Game Over) -->
+    <div id="patch-no-moves-overlay">
+      <div class="patch-no-moves-popup">
+        <div class="patch-no-moves-title">NO MOVES LEFT</div>
+        <div class="patch-no-moves-sub">The board is too full...</div>
+      </div>
+    </div>
+
+    <div id="game-over-overlay" class="overlay">
+      <div id="game-over-box" class="modal-box neon-box w-full py-6 px-6 max-h-[90%]">
+        <h2 class="text-red text-3xl font-black mb-1 drop-shadow-lg text-center uppercase">Game Over</h2>
+        <div id="final-score" class="final-score-highlight">0</div>
+
+        <div class="game-over-stats-grid mb-8">
+          <div class="game-over-stat-card">
+            <span class="text-[9px] text-blue-400 font-black uppercase tracking-widest opacity-60">XP Gained</span>
+            <span id="game-over-xp-earned" class="text-lg font-black xp-value">0</span>
+          </div>
+          <div class="game-over-stat-card">
+            <span class="text-[9px] text-yellow font-black uppercase tracking-widest opacity-60">Coins Gained</span>
+            <div class="flex items-center gap-1.5">
+              <span class="currency-icon coin-icon m-0">B</span>
+              <span id="game-over-coins-val" class="text-lg font-black coin-value">0</span>
+            </div>
+          </div>
+          <div class="game-over-stat-card col-span-2">
+            <span class="text-[9px] text-white font-black uppercase tracking-widest">Best Score</span>
+            <div class="flex items-center gap-2">
+              <svg width="16" height="16" class="text-yellow">
+                <use xlink:href="#icon-trophy"></use>
+              </svg>
+              <span id="best-score-val" class="text-lg font-black">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="game-over-dynamic-stats" class="w-full grid grid-cols-2 gap-2 mt-2">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="flex gap-2 w-full mt-4 shrink-0">
+          <button id="btn-home-gameover" class="btn-ui btn-red-dim flex-1">MENU</button>
+          <button id="btn-retry-gameover"
+            class="btn-ui btn-blue-neon flex-1 shadow-[0_0_15px_rgba(59,130,246,0.3)]">RETRY</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals (Managed by externalOverlays in GameScene) -->
+
+  <div id="adventure-modal" class="overlay">
+    <div id="adventure-box" class="modal-box neon-box w-full h-full flex flex-col p-6">
+      <h2 class="text-yellow text-xl font-black mb-1 uppercase text-center tracking-wider shrink-0">ADVENTURE</h2>
+      <p class="text-slate-400 text-[10px] text-center mb-4 shrink-0">Choose a stage to begin</p>
+
+      <div class="flex-1 overflow-y-auto w-full custom-scrollbar pr-1">
+        <div id="adventure-level-grid"></div>
+      </div>
+
+      <div id="adventure-pagination" class="flex justify-center flex-wrap gap-1 mt-3 mb-2 px-1 shrink-0"></div>
+
+      <div class="w-full shrink-0 pt-3 border-t border-white/5 mt-auto">
+        <button id="btn-close-adventure" class="btn-ui w-full m-0">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Adventure Level Confirmation Info Modal -->
+  <div id="adventure-level-info-modal" class="overlay">
+    <div class="modal-box neon-box !max-w-[320px] !p-6 text-center">
+      <h2 id="adv-info-title" class="text-yellow text-2xl font-black mb-1 uppercase tracking-widest text-center">STAGE
+        001</h2>
+      <p id="adv-info-best" class="text-slate-400 text-[11px] mb-6 font-bold uppercase">Best Score: 0</p>
+
+      <div class="bg-black/20 rounded-2xl p-4 border border-white/5 mb-8 text-left space-y-4">
+        <h4 class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1 text-center">MISSION GOALS</h4>
+
+        <!-- Goal Items -->
+        <div id="goal-score-row" class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded-lg bg-yellow/10 flex items-center justify-center text-yellow shrink-0 border border-yellow/20">
+            <svg width="18" height="18">
+              <use xlink:href="#icon-trophy"></use>
+            </svg>
+          </div>
+          <div>
+            <div class="text-[10px] text-gray-500 font-bold uppercase leading-tight">Target Score</div>
+            <div id="goal-score-val" class="text-sm font-black text-white font-mono">3,000</div>
+          </div>
+        </div>
+
+        <div id="goal-rows-row" class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded-lg bg-green/10 flex items-center justify-center text-green shrink-0 border border-green/20">
+            <svg width="18" height="18">
+              <use xlink:href="#icon-rows"></use>
+            </svg>
+          </div>
+          <div>
+            <div class="text-[10px] text-gray-500 font-bold uppercase leading-tight">Clear Rows</div>
+            <div id="goal-rows-val" class="text-sm font-black text-white font-mono">10</div>
+          </div>
+        </div>
+
+        <div id="goal-combo-row" class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded-lg bg-red/10 flex items-center justify-center text-red shrink-0 border border-red/20">
+            <svg width="18" height="18">
+              <use xlink:href="#icon-flame"></use>
+            </svg>
+          </div>
+          <div>
+            <div class="text-[10px] text-gray-500 font-bold uppercase leading-tight">Combat Combos</div>
+            <div id="goal-combo-val" class="text-sm font-black text-white font-mono">No requirement</div>
+          </div>
+        </div>
+
+        <div id="goal-clear-row" class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded-lg bg-cyan/10 flex items-center justify-center text-cyan shrink-0 border border-cyan/20">
+            <svg width="18" height="18">
+              <use xlink:href="#icon-grid"></use>
+            </svg>
+          </div>
+          <div>
+            <div class="text-[10px] text-gray-500 font-bold uppercase leading-tight">Special Clears</div>
+            <div id="goal-clear-val" class="text-sm font-black text-white font-mono">No requirement</div>
+          </div>
+        </div>
+
+        <div id="goal-gem-row" class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded-lg bg-yellow/10 flex items-center justify-center text-yellow shrink-0 border border-yellow/20">
+            <svg width="18" height="18">
+              <use xlink:href="#icon-gem"></use>
+            </svg>
+          </div>
+          <div>
+            <div class="text-[10px] text-gray-500 font-bold uppercase leading-tight">Gem Collection</div>
+            <div id="goal-gem-val" class="text-sm font-black text-white font-mono">No requirement</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 w-full">
+        <button id="btn-cancel-adv-info" class="btn-action-neon flex-1 py-3 m-0">CANCEL</button>
+        <button id="btn-start-adv-info"
+          class="btn-action-neon btn-action-neon-blue flex-1 py-3 m-0 !text-white !bg-blue-600/40">START</button>
+      </div>
+    </div>
+  </div>
+
+
+  </div>
+
+  <div id="profile-modal" class="overlay">
+    <div id="profile-box" class="modal-box bg-[#0c1628]/95 border-blue-500/20 backdrop-blur-xl"
+      style="display: flex; flex-direction: column; padding: 1.25rem 1rem;">
+      <h2 class="text-white text-base font-black mb-1 shrink-0 text-center uppercase tracking-[0.4em]">Profile</h2>
+
+      <!-- Profile Header (Wide) -->
+      <div class="w-full bg-white/5 rounded-2xl border border-white/5 mb-5 p-4 flex flex-col gap-4 shrink-0">
+        <div class="flex items-center gap-4">
+          <!-- Avatar Frame (Clickable) -->
+          <div id="profile-avatar-clickable"
+            class="relative w-16 h-16 rounded-full border-2 border-blue-500/30 p-1 cursor-pointer hover:border-blue-500 transition-all flex-shrink-0">
+            <div class="w-full h-full rounded-full overflow-hidden bg-[#0f172a]">
+              <img id="profile-avatar-img" src="./assets/images/avatars/avatar_default.png"
+                class="w-full h-full object-cover hidden">
+              <div id="profile-avatar-svg" class="w-full h-full flex items-center justify-center">
+                <svg width="32" height="32" class="text-blue-500/50">
+                  <use xlink:href="#icon-avatar"></use>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Info (Aligned) -->
+          <div class="flex flex-col gap-1 min-w-0">
+            <h3 id="profile-name-val" class="text-lg font-black text-white truncate">Player Name</h3>
+            <div id="profile-user-val" class="text-[10px] font-bold text-blue-400">@username</div>
+            <div id="profile-joined-val" class="text-[9px] font-bold text-gray-500 mt-1 uppercase tracking-wider">
+              JOINED: --/--/---- --:--:--</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto w-full px-1 custom-scrollbar">
+        <!-- Main Stats (Balanced Rows) -->
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <div class="bg-white/3 p-2.5 rounded-xl border border-white/5">
+            <div class="text-[7px] text-gray-500 font-black uppercase tracking-widest mb-1 opacity-70">High Score</div>
+            <div id="stat-high-score" class="text-sm font-black text-yellow-500">0</div>
+          </div>
+          <div class="bg-white/3 p-2.5 rounded-xl border border-white/5">
+            <div class="text-[7px] text-gray-500 font-black uppercase tracking-widest mb-1 opacity-70">Rows Cleared
+            </div>
+            <div id="stat-total-rows" class="text-sm font-black text-white">0</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <div class="bg-white/3 p-2.5 rounded-xl border border-white/5">
+            <div class="text-[7px] text-gray-500 font-black uppercase tracking-widest mb-1 opacity-70">Perfect Clear
+            </div>
+            <div id="stat-perfect-clears" class="text-sm font-black text-orange-500">0</div>
+          </div>
+          <div class="bg-white/3 p-2.5 rounded-xl border border-white/5">
+            <div class="text-[7px] text-gray-500 font-black uppercase tracking-widest mb-1 opacity-70">Perfect Block
+
+            </div>
+            <div id="stat-perfect-flats" class="text-sm font-black text-cyan-400">0</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          <div class="bg-white/3 p-2.5 rounded-xl border border-white/5">
+            <div class="text-[7px] text-gray-500 font-black uppercase tracking-widest mb-1 opacity-70">Elite Streak
+            </div>
+            <div id="stat-elite-streaks" class="text-sm font-black text-emerald-400">0</div>
+          </div>
+          <div class="bg-white/3 p-2.5 rounded-xl border border-white/5">
+            <div class="text-[7px] text-gray-500 font-black uppercase tracking-widest mb-1 opacity-70">Max Combo</div>
+            <div id="stat-max-combo" class="text-sm font-black text-purple-400">x0</div>
+          </div>
+        </div>
+
+        <!-- Specific Row Clear Stats -->
+        <div class="bg-white/3 rounded-2xl border border-white/5 p-4 mb-6">
+          <div class="text-[9px] text-gray-500 font-black uppercase tracking-widest mb-4 opacity-70 text-center">
+            Performance Data</div>
+          <div class="profile-rows-grid">
+            <div class="profile-row-stat-item">
+              <div class="profile-row-stat-label">SINGLE</div>
+              <div id="stat-row-1" class="profile-row-stat-val">0</div>
+            </div>
+            <div class="profile-row-stat-item">
+              <div class="profile-row-stat-label">DUAL</div>
+              <div id="stat-row-2" class="profile-row-stat-val">0</div>
+            </div>
+            <div class="profile-row-stat-item">
+              <div class="profile-row-stat-label">TRIO</div>
+              <div id="stat-row-3" class="profile-row-stat-val">0</div>
+            </div>
+            <div class="profile-row-stat-item">
+              <div class="profile-row-stat-label">QUADRA</div>
+              <div id="stat-row-4" class="profile-row-stat-val">0</div>
+            </div>
+            <div class="profile-row-stat-item">
+              <div class="profile-row-stat-label">B-GEMS</div>
+              <div id="stat-row-5" class="profile-row-stat-val">0</div>
+            </div>
+            <div class="profile-row-stat-item border border-blue-500/20 bg-blue-500/5">
+              <div class="profile-row-stat-label text-blue-500/60">Playtime</div>
+              <div id="stat-total-playtime" class="profile-row-stat-val text-blue-400" style="font-size: 11px;">0h 0m
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collection Section -->
+        <div class="flex items-center gap-3 mb-4">
+          <span class="h-[1px] flex-1 bg-white/10"></span>
+          <h3 class="text-white text-[10px] font-black uppercase tracking-[0.3em]">Gem Collection</h3>
+          <span class="h-[1px] flex-1 bg-white/10"></span>
+        </div>
+        <div id="profile-gem-grid" class="profile-gem-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <div class="w-full shrink-0 pt-4 border-t border-white/5 mt-auto">
+        <button id="btn-close-profile" class="btn-ui w-full" style="margin: 0;">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="quests-modal" class="overlay">
+    <div id="missions-box" class="modal-box neon-box"
+      style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 1.5rem 1rem;">
+      <h2 class="text-yellow text-xl font-bold mb-4 shrink-0 text-center">DAILY MISSIONS</h2>
+      <div id="quests-list" class="flex-1 overflow-y-auto w-full pr-2 flex flex-col gap-3 custom-scrollbar"></div>
+      <div class="w-full shrink-0 pt-3 border-t border-white/5 mt-auto">
+        <button id="btn-close-quests" class="btn-ui w-full" style="margin: 0;">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="settings-modal" class="overlay">
+    <div id="settings-box" class="modal-box neon-box"
+      style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 1.5rem 1rem;">
+      <h2 class="text-white text-xl font-bold mb-4 shrink-0 text-center uppercase tracking-widest">Options</h2>
+
+      <div class="flex-1 overflow-y-auto w-full px-1 custom-scrollbar" style="margin-bottom: 0.5rem;">
+        <div class="flex flex-col gap-5 w-full">
+          <!-- Sound Control -->
+          <div class="flex items-center w-full gap-4">
+            <span class="text-gray-200 text-[11px] font-bold w-12 shrink-0">Sound</span>
+            <input type="range" id="slider-sfx-volume" min="0" max="1" step="0.1" value="1" class="custom-slider grow">
+            <div class="flex items-center justify-center shrink-0 w-10">
+              <span id="sfx-status" class="text-[10px] font-black text-cyan-400">ON</span>
+            </div>
+          </div>
+
+          <!-- Music Control -->
+          <div class="flex items-center w-full gap-4">
+            <span class="text-gray-200 text-[11px] font-bold w-12 shrink-0">Music</span>
+            <input type="range" id="slider-music-volume" min="0" max="1" step="0.1" value="0.7"
+              class="custom-slider grow">
+            <div class="flex items-center justify-center shrink-0 w-10">
+              <span id="music-status" class="text-[10px] font-black text-cyan-400">ON</span>
+            </div>
+          </div>
+
+          <div class="divider my-1 opacity-5"></div>
+
+          <div class="w-full">
+            <div
+              class="flex justify-between items-center bg-white/5 p-2.5 px-3 rounded-xl border border-white/5 hover:bg-white/10 transition-all cursor-pointer">
+              <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Smart Drop</span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="toggle-smart-drop" class="sr-only peer" checked>
+                <div
+                  class="w-8 h-4.5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-blue-500">
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="w-full">
+            <div
+              class="flex justify-between items-center bg-white/5 p-2.5 px-3 rounded-xl border border-white/5 hover:bg-white/10 transition-all cursor-pointer">
+              <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Vibration</span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="toggle-vibration" class="sr-only peer" checked>
+                <div
+                  class="w-8 h-4.5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-blue-500">
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Music Selector -->
+          <div class="flex flex-col gap-2">
+            <label class="text-gray-500 text-[9px] font-black uppercase tracking-widest pl-0.5 opacity-80">Background
+              Music Track</label>
+            <select id="select-bgm"
+              class="bg-slate-800/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] text-white focus:border-blue-500 outline-none w-full appearance-none">
+              <option value="bgm_main">Celestial Theme</option>
+              <option value="bgm_classic">Retro Classics</option>
+              <option value="bgm_chill">Night Runner (Chill)</option>
+            </select>
+          </div>
+
+          <button id="btn-fullscreen-settings" class="btn-ui btn-blue-alt-neon w-full"
+            style="padding: 12px 0; font-size: 10px;">
+            ENTER FULLSCREEN MODE
+          </button>
+
+          <!-- Framed UID -->
+          <div class="btn-ui relative w-full flex flex-col items-center justify-center px-4 py-5 cursor-default mt-2"
+            style="background: rgba(255,255,255,0.02);">
+            <span id="menu-uid-val"
+              class="text-[10px] text-cyan-300 font-mono tracking-tight leading-tight select-all uid-text text-center font-bold">UID:
+              ---</span>
+            <button id="btn-copy-uid"
+              class="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-white transition-all bg-white/5 hover:bg-white/10 rounded-lg border border-white/5">
+              <svg width="14" height="14">
+                <use xlink:href="#icon-copy"></use>
+              </svg>
+            </button>
+          </div>
+          <button id="btn-change-password-trigger"
+            class="btn-ui w-full hover:bg-amber-500/10 hover:text-amber-400 transition-all font-bold border-amber-500/20 text-xs hidden py-3">CHANGE
+            PASSWORD</button>
+        </div>
+      </div>
+
+      <div class="w-full shrink-0 flex flex-col items-center gap-1.5 pt-3 border-t border-white/5">
+        <span class="text-[9px] text-gray-600 font-black tracking-[0.3em] uppercase opacity-60">Version V1.01a</span>
+        <button id="btn-close-settings"
+          class="btn-ui w-full hover:bg-red-500/10 hover:text-red-400 transition-all font-bold m-0">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="shop-modal" class="overlay">
+    <!-- Shop content injected by StoreManager -->
+  </div>
+
+  <div id="inventory-modal" class="overlay">
+    <!-- Inventory content injected by StoreManager -->
+  </div>
+
+  <div id="tutorial-modal" class="overlay">
+    <div id="tutorial-box" class="modal-box neon-box flex flex-col p-6">
+      <h2 class="text-white text-xl font-bold mb-4 shrink-0 text-center uppercase tracking-widest">How To Play</h2>
+
+      <div id="tutorial-content" class="flex-1 overflow-y-auto w-full custom-scrollbar pr-1">
+        <!-- Nội dung sẽ được điền bởi Script dựa trên thiết bị -->
+      </div>
+
+      <div class="w-full shrink-0 pt-3 border-t border-white/5 mt-auto">
+        <button id="btn-close-tutorial" class="btn-ui w-full m-0">CLOSE</button>
+      </div>
+    </div>
+  </div>
+  <div id="leaderboard-modal" class="overlay board-overlay">
+    <div id="leaderboard-box" class="modal-box neon-box card flex flex-col p-4 px-2.5">
+      <div class="shrink-0 w-full max-w-full">
+        <h2 class="text-blue-400 text-xl font-black mb-3 shrink-0 text-center uppercase tracking-widest">Rankings</h2>
+        <div id="leaderboard-tabs" class="shop-tabs mb-4">
+          <button id="tab-lb-classic" class="tab-btn active">CLASSIC</button>
+          <button id="tab-lb-patch" class="tab-btn">PATCH</button>
+          <button id="tab-lb-drone" class="tab-btn">DRONE</button>
+          <button id="tab-lb-brick" class="tab-btn">BRICK</button>
+          <button id="tab-lb-adventure" class="tab-btn">ADVENTURE</button>
+          <button id="tab-lb-level" class="tab-btn">LEVEL</button>
+          <button id="tab-lb-collector" class="tab-btn">COLLECTOR</button>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto w-full pr-1 custom-scrollbar">
+        <div id="leaderboard-list" class="flex flex-col gap-2.5 mb-2"></div>
+        <div id="lb-pagination" class="flex justify-center items-center w-full gap-2 mb-4 px-2"></div>
+      </div>
+
+      <div class="w-full shrink-0 pt-3 border-t border-white/5 mt-auto flex flex-col gap-3">
+        <div id="my-rank-fixed"
+          class="w-full bg-slate-800/80 p-3 rounded-xl border border-blue-500/30 flex flex-col gap-1">
+          <div class="flex justify-between items-center w-full">
+            <span class="text-blue-400 font-bold text-[10px] uppercase tracking-wider">Your Rank</span>
+            <span id="my-rank-val" class="text-white font-black text-sm"># ---</span>
+          </div>
+          <div class="flex justify-between items-center w-full">
+            <span id="my-lb-label" class="text-blue-400 font-bold text-[10px] uppercase tracking-wider">Best
+              Score</span>
+            <span id="my-best-val" class="text-yellow font-black text-sm">---</span>
+          </div>
+        </div>
+        <button id="btn-close-leaderboard" class="btn-ui w-full m-0">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tos-modal" class="overlay">
+    <div class="modal-box neon-box w-full max-h-[92%] p-6">
+      <h2 class="text-white text-xl font-bold mb-4 uppercase text-center">Terms of Service</h2>
+      <div id="tos-content"
+        class="overflow-y-auto text-[11px] text-gray-400 text-left pr-4 leading-relaxed custom-scrollbar flex-1">
+
+        <!-- Nội dung ToS sẽ được nạp tự động từ TermsContent.ts khi mở modal -->
+      </div>
+      <button id="btn-close-tos" class="btn-ui btn-blue-neon w-full mt-6">I UNDERSTAND</button>
+    </div>
+  </div>
+
+  <!-- Edit Name Modal -->
+  <div id="edit-name-modal" class="overlay">
+    <div class="modal-box neon-box w-full py-8 px-6">
+      <h2 class="text-white text-xl font-bold mb-4">CHANGE DISPLAY NAME</h2>
+      <p class="text-[10px] text-gray-400 mb-4 px-2 flex items-center gap-1.5">Changing your display name costs
+        <span class="flex items-center gap-1">
+          <span class="currency-icon coin-icon" style="width: 12px; height: 12px; font-size: 8px;">B</span>
+          <span class="text-yellow font-black">1.000</span>
+        </span>. Your new name will be updated on leaderboards.
+      </p>
+
+      <input type="text" id="new-display-name-input" placeholder="New Name (Max 16 chars)" maxlength="16"
+        class="bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-blue-500 outline-none w-full mb-6">
+
+      <div class="flex gap-2 w-full">
+        <button id="btn-cancel-name-change" class="btn-ui flex-1 !py-3.5 m-0">CANCEL</button>
+        <button id="btn-confirm-name-change" class="btn-ui btn-blue-neon flex-1 !py-3.5 m-0">CHANGE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Action Modal -->
+  <div id="admin-action-modal" class="overlay">
+    <div class="modal-box neon-box w-full py-8 px-6">
+      <h2 class="text-red-500 text-xl font-black mb-1 uppercase tracking-wider text-center">ADMIN ACTION</h2>
+
+      <div class="flex flex-col gap-1 mb-4 text-center">
+        <p id="admin-action-target" class="text-[13px] text-white font-bold"></p>
+        <div
+          class="flex items-center justify-center gap-2 bg-black/40 py-1 px-3 rounded-full border border-white/10 w-fit mx-auto">
+          <span class="text-[10px] text-gray-400 font-mono">UID:</span>
+          <span id="admin-action-uid" class="text-[10px] text-blue-400 font-mono font-bold"></span>
+          <button id="btn-admin-copy-uid" class="text-gray-500 hover:text-white transition-colors cursor-pointer"
+            title="Copy UID">
+            <svg width="12" height="12">
+              <use xlink:href="#icon-copy"></use>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-black/20 p-3 rounded-lg border border-white/5 mb-6">
+        <label class="text-[10px] text-gray-400 uppercase font-black block mb-2 text-center">Reason for Reset</label>
+        <textarea id="admin-action-note" placeholder="Example: Vulgar name, violating rules..."
+          class="bg-black/40 border border-white/10 rounded-lg p-3 text-sm text-white focus:border-red-500 outline-none w-full h-24 resize-none"></textarea>
+      </div>
+
+      <div class="flex gap-3 w-full">
+        <button id="btn-admin-cancel" class="btn-action-neon flex-1 py-3 m-0">CANCEL</button>
+        <button id="btn-admin-confirm" class="btn-action-neon btn-action-neon-red flex-1 py-3 m-0">CONFIRM</button>
+      </div>
+    </div>
+  </div>
+  <!-- Custom Message Modal (Alert) -->
+  <div id="message-modal" class="overlay">
+    <div class="modal-box neon-box !max-w-[320px] !p-8 text-center">
+      <h3 id="msg-modal-title" class="text-xl font-black mb-4 tracking-widest text-blue-400 uppercase">TITLE</h3>
+      <p id="msg-modal-body" class="text-sm text-slate-400 leading-relaxed mb-8">Message body goes here...</p>
+      <div id="msg-modal-actions" class="flex gap-3 w-full">
+        <button id="msg-modal-cancel" class="btn-action-neon flex-1 py-3 m-0 hidden">CANCEL</button>
+        <button id="msg-modal-close" class="btn-action-neon flex-1 py-3 m-0">OK</button>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- UI TEMPLATES -->
+
+  <!-- Template for Stage Clear Summary Item -->
+  <template id="tpl-stage-clear-stat">
+    <div class="flex justify-between items-center py-2.5 border-b border-white/5 gap-4">
+      <span class="tpl-stat-label text-slate-400 font-bold text-[13px] uppercase shrink-0">Label</span>
+      <span class="tpl-stat-value text-white font-mono text-xl font-black text-right">0</span>
+    </div>
+  </template>
+
+  <!-- Template for Profile Gem Item -->
+  <template id="tpl-profile-gem">
+    <div class="profile-gem-item">
+      <div class="profile-gem-icon"></div>
+      <div class="profile-gem-name">Gem Name</div>
+      <div class="profile-gem-count">0</div>
+    </div>
+  </template>
+
+  <!-- Template for Row Distribution Item -->
+  <template id="tpl-row-dist-item">
+    <div class="row-stat-box">
+      <div class="row-stat-label">Label</div>
+      <div class="row-stat-value">0</div>
+    </div>
+  </template>
+
+  <script>
+    function copyUID() {
+      const uidText = document.getElementById('profile-uid-val')?.innerText || '';
+      if (uidText && uidText !== '---') {
+        navigator.clipboard.writeText(uidText).then(() => {
+          alert('UID copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>
