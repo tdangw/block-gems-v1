@@ -93,7 +93,7 @@
     }
   </style>
 
-<script type="module" crossorigin src="./assets/index-DIevTknu.js"></script>
+<script type="module" crossorigin src="./assets/index-CfKi8Yg1.js"></script>
 <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-jpDsebLB.js">
 <link rel="modulepreload" crossorigin href="./assets/phaser-Bc64RUsP.js">
 <link rel="stylesheet" crossorigin href="./assets/index-jMFQEAun.css">
@@ -502,23 +502,9 @@
             <h1 class="game-title">BLOCK GEMS</h1>
             <p class="subtitle">Smart Evolution</p>
             <button id="btn-start" class="btn-primary py-3 px-8 mb-1" style="width: fit-content;">PLAY NOW</button>
-            <!-- Mode selector -->
-            <div id="mode-selector" class="grid grid-cols-2 gap-3 w-full px-4 mt-[10px] mb-3 max-w-[320px]">
-              <button id="btn-mode-block-brick" class="btn-mode btn-mode-classic">
-                BLOCK BRICK
-              </button>
-              <button id="btn-mode-adventure" class="btn-mode btn-mode-adventure">
-                ADVENTURE
-              </button>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 w-full px-4 mb-6 max-w-[320px]">
-              <button id="btn-mode-bb1" class="btn-mode btn-mode-drone">BLOCK DRONE</button>
-              <button id="btn-mode-bb2" class="btn-mode btn-mode-gems2">BLOCK GEMS 2</button>
-              <button id="btn-mode-bb3" class="btn-mode btn-mode-patch">BLOCK PATCH</button>
-              <button id="btn-mode-bb4" class="btn-mode btn-mode-gems4">BLOCK GEMS 4</button>
-              <button id="btn-mode-bb5" class="btn-mode btn-mode-gems5">BLOCK GEMS 5</button>
-              <button id="btn-mode-bb6" class="btn-mode btn-mode-gems6">BLOCK GEMS 6</button>
+            <!-- Mode selector (dynamically populated by UIManager.renderGameModes) -->
+            <div id="mode-selector" class="grid grid-cols-2 gap-3 w-full px-4 mt-[10px] mb-6 max-w-[320px]">
+              <!-- Generated dynamically -->
             </div>
           </div>
           <button id="btn-how-to-play" class="btn-outline"
