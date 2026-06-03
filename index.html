@@ -92,11 +92,11 @@
       letter-spacing: 0.2em;
     }
   </style>
-
-<script type="module" crossorigin src="./assets/index-BJ1fycyW.js"></script>
-<link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-jpDsebLB.js">
-<link rel="modulepreload" crossorigin href="./assets/phaser-Bc64RUsP.js">
-<link rel="stylesheet" crossorigin href="./assets/index-jMFQEAun.css">
+  <script type="module" crossorigin src="./assets/index-CTw0O72U.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-jpDsebLB.js">
+  <link rel="modulepreload" crossorigin href="./assets/phaser-Bc64RUsP.js">
+  <link rel="stylesheet" crossorigin href="./assets/index-CTp4PcNj.css">
+</head>
 
 <body class="bg-black text-white font-['Plus_Jakarta_Sans'] overflow-hidden select-none">
   <!-- SVG SPRITES SYSTEM -->
@@ -245,156 +245,12 @@
 
     <!-- HTML UI Overlay Layer -->
     <div id="ui-layer">
-      <!-- Block Gems Timer Bar (Hidden by default) -->
-      <div id="timer-hud" class="hidden absolute z-100 origin-top flex flex-col items-center">
-        <!-- Game Mode Name -->
-        <div id="hud-game-mode-name" class="font-black uppercase tracking-[0.25em] mb-1 text-white text-[10px]"></div>
-        <div id="timer-bar"
-          class="hidden bg-black/85 backdrop-blur-xl rounded-lg p-1.5 px-3 border border-white/10 shadow-2xl flex items-center gap-2 w-full">
-          <span class="text-[9px] font-black text-cyan-400 uppercase whitespace-nowrap">Block Gems</span>
-          <div class="h-1.5 flex-grow bg-slate-900/60 rounded-full overflow-hidden border border-white/5 relative">
-            <div id="block-gems-timer-fill"
-              class="h-full w-0 bg-gradient-to-r from-cyan-400 to-blue-500 shadow-[0_0_10px_rgba(34,211,238,0.5)]">
-            </div>
-            <div id="block-gems-timer-text-container"
-              class="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <span id="block-gems-timer-text"
-                class="text-[7px] font-black text-white/90 leading-none uppercase drop-shadow-md"></span>
-            </div>
-          </div>
-        </div>
 
-        <!-- Fever Mode Bar (Only for Classic) -->
-        <div id="hud-fever-bar-wrapper"
-          class="hidden bg-black/85 backdrop-blur-xl rounded-lg p-1.5 px-3 border border-white/10 shadow-2xl flex items-center gap-2 w-full">
-          <span id="hud-fever-label"
-            class="text-[9px] font-black text-cyan-400 uppercase whitespace-nowrap tracking-wider">Fever</span>
-          <div class="h-2.5 flex-grow bg-slate-900/60 rounded-full overflow-hidden border border-white/5 relative">
-            <div id="fever-bar-fill"
-              class="h-full w-full origin-left bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)] transition-all duration-200"
-              style="transform: scaleX(0)">
-            </div>
-            <div id="fever-bar-text"
-              class="absolute inset-0 flex items-center justify-center pointer-events-none text-[7.5px] font-black text-white uppercase">
-              0/100 - x2
-            </div>
-          </div>
-        </div>
-
-        <!-- Funny text when Fever Core not active -->
-        <div id="hud-fever-funny-text"
-          class="hidden text-[9px] font-black text-slate-500/80 uppercase whitespace-nowrap tracking-[0.15em] mt-2 text-center animate-pulse">
-          Chill nào!
-        </div>
-      </div>
-
-      <!-- Adventure HUD (Interactive & Expandable) -->
-      <div id="adventure-progress-hud"
-        class="hidden absolute transition-all duration-300 z-[90] cursor-pointer pointer-events-auto"
-        title="Tap to see goals">
-        <!-- Main Bar (Always Visible) -->
-        <div id="adv-hud-main"
-          class="bg-black/85 backdrop-blur-xl rounded-t-2xl rounded-b-lg p-2 px-3 border border-white/10 flex items-center gap-3 shadow-lg hover:border-blue-500/30 transition-colors">
-          <div id="adv-stage-label"
-            class="text-[10px] text-gray-200 font-black uppercase tracking-wider whitespace-nowrap">
-            STAGE 001/100
-          </div>
-          <!-- Progress Bar in HUD (One-Line Layout) -->
-          <div class="flex-1 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
-            <div id="adv-hud-progress-bar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%;">
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <div id="adv-hud-percent" class="text-[10px] font-black text-blue-400">0%</div>
-            <div id="adv-expand-icon" class="text-white/30 transition-transform duration-300">
-              <svg width="12" height="12">
-                <use xlink:href="#icon-chevron-down"></use>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <!-- Expandable Goals Detail -->
-        <div id="adv-hud-goals"
-          class="hidden bg-black/85 backdrop-blur-xl rounded-b-2xl p-4 border-x border-b border-white/10 mt-[-10px] pt-[20px] shadow-2xl space-y-3 pointer-events-none">
-          <!-- Goal 1: Score -->
-          <div id="hud-goal-score-row" class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-4 text-yellow-400">
-                <svg width="16" height="16">
-                  <use xlink:href="#icon-trophy"></use>
-                </svg>
-              </div>
-              <span class="text-[10px] text-gray-400 font-bold uppercase">Score</span>
-            </div>
-            <span id="hud-goal-score" class="text-[11px] font-black font-mono">0 / 0</span>
-          </div>
-          <!-- Goal 2: Rows -->
-          <div id="hud-goal-rows-row" class="flex items-center justify-between" style="display: none;">
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-4 text-green-400">
-                <svg width="16" height="16">
-                  <use xlink:href="#icon-rows"></use>
-                </svg>
-              </div>
-              <span class="text-[10px] text-gray-400 font-bold uppercase">Rows</span>
-            </div>
-            <span id="hud-goal-rows" class="text-[11px] font-black font-mono">0 / 0</span>
-          </div>
-
-          <!-- Goal 4: Specific Gems (Dynamic Container) -->
-          <div id="hud-gem-goals-list" class="space-y-3 pt-1 border-t border-white/5">
-            <!-- Dynamic gem goals will be injected here -->
-          </div>
-          <!-- Goal 3: Combo (Optional row) -->
-          <div id="hud-combo-row" class="flex items-center justify-between" style="display: none;">
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-4 text-red-500">
-                <svg width="18" height="18">
-                  <use xlink:href="#icon-flame"></use>
-                </svg>
-              </div>
-              <span class="text-[10px] text-gray-400 font-bold uppercase">Combos</span>
-            </div>
-            <span id="hud-goal-combo" class="text-[11px] font-black font-mono">0 / 1</span>
-          </div>
-          <!-- Goal 4: Multi-Line Clears (Optional row) -->
-          <div id="hud-clear-row" class="flex items-center justify-between" style="display: none;">
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-4 text-cyan-400">
-                <svg width="18" height="18">
-                  <use xlink:href="#icon-grid"></use>
-                </svg>
-              </div>
-              <span class="text-[10px] text-gray-400 font-bold uppercase">Special</span>
-            </div>
-            <span id="hud-goal-clear" class="text-[11px] font-black font-mono">0 / 0</span>
-          </div>
-          <!-- Goal 5: Gems (New) -->
-          <div id="hud-gem-row" class="flex items-center justify-between" style="display: none;">
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-4 text-yellow-400">
-                <svg width="18" height="18">
-                  <use xlink:href="#icon-gem"></use>
-                </svg>
-              </div>
-              <span class="text-[10px] text-gray-400 font-bold uppercase">Gems</span>
-            </div>
-            <span id="hud-goal-gem" class="text-[11px] font-black font-mono">0 / 0</span>
-          </div>
-        </div>
-      </div>
-      <!-- Gem HUD (Top Right of Board) -->
-      <div id="gem-hud" class="hidden absolute z-[85] hud-vertical-container"></div>
 
       <!-- Pocket HUD (Top Left of Board) -->
       <div id="pocket-hud" class="hidden absolute z-[85] hud-vertical-container"></div>
 
-      <!-- Palette Card Slots (Below Pocket HUD) -->
-      <div id="card-slots-container" class="hidden absolute z-[85] hud-vertical-container pointer-events-none">
-        <div id="card-slot-0" class="card-slot pointer-events-auto cursor-pointer"></div>
-        <div id="card-slot-1" class="card-slot pointer-events-auto cursor-pointer"></div>
-      </div>
+
 
       <!-- Nút Menu trên Board -->
       <div id="ui-board-header">
@@ -406,45 +262,7 @@
 
         <div id="next-box" class="horizontal-next"></div>
 
-        <!-- [NEW] Patch Boosters HUD - Dời sang bên phải để cân đối -->
-        <div id="patch-booster-hud"
-          class="hidden flex items-center gap-2.5 bg-black/50 backdrop-blur-lg px-4 py-1.5 rounded-full border border-white/10 shadow-xl">
-          <div id="patch-hud-rot-group" class="flex items-center gap-1.5 group cursor-pointer">
-            <div class="text-cyan-400 opacity-80 group-hover:opacity-100 transition-opacity">
-              <svg width="15" height="15">
-                <use xlink:href="#icon-rotate"></use>
-              </svg>
-            </div>
-            <span id="patch-hud-rot-val" class="font-black text-[12px] text-white">0</span>
-          </div>
-          <div class="w-[1px] h-3 bg-white/10"></div>
-          <div id="patch-hud-trash-group" class="flex items-center gap-1.5 group cursor-pointer">
-            <div class="text-rose-500 opacity-80 group-hover:opacity-100 transition-opacity">
-              <svg width="15" height="15">
-                <use xlink:href="#icon-trash"></use>
-              </svg>
-            </div>
-            <span id="patch-hud-trash-val" class="font-black text-[12px] text-white">0</span>
-          </div>
-          <div class="w-[1px] h-3 bg-white/10"></div>
-          <div id="patch-hud-refill-group" class="flex items-center gap-1.5 group cursor-pointer">
-            <div class="text-amber-500 opacity-80 group-hover:opacity-100 transition-opacity">
-              <svg width="15" height="15">
-                <use xlink:href="#icon-refill"></use>
-              </svg>
-            </div>
-            <span id="patch-hud-refill-val" class="font-black text-[12px] text-white">0</span>
-          </div>
-          <div class="w-[1px] h-3 bg-white/10"></div>
-          <div id="patch-hud-hint-group" class="flex items-center gap-1.5 group cursor-pointer">
-            <div class="text-indigo-400 opacity-80 group-hover:opacity-100 transition-opacity">
-              <svg width="16" height="16">
-                <use xlink:href="#icon-hint"></use>
-              </svg>
-            </div>
-            <span id="patch-hud-hint-val" class="font-black text-[12px] text-white">0</span>
-          </div>
-        </div>
+
 
         <button id="btn-leaderboard" class="btn-icon">
           <svg width="20" height="20" style="color: #facc15;">
@@ -502,28 +320,12 @@
             <h1 class="game-title">BLOCK GEMS</h1>
             <p class="subtitle">Smart Evolution</p>
             <button id="btn-start" class="btn-primary py-3 px-8 mb-1" style="width: fit-content;">PLAY NOW</button>
-            <!-- Mode selector -->
-            <div id="mode-selector" class="grid grid-cols-2 gap-3 w-full px-4 mt-[10px] mb-3 max-w-[320px]">
-              <button id="btn-mode-block-brick" class="btn-mode btn-mode-classic">
-                BLOCK BRICK
-              </button>
-              <button id="btn-mode-adventure" class="btn-mode btn-mode-adventure">
-                ADVENTURE
-              </button>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 w-full px-4 mb-6 max-w-[320px]">
-              <button id="btn-mode-bb1" class="btn-mode btn-mode-drone">BLOCK DRONE</button>
-              <button id="btn-mode-bb2" class="btn-mode btn-mode-gems2">BLOCK GEMS 2</button>
-              <button id="btn-mode-bb3" class="btn-mode btn-mode-patch">BLOCK PATCH</button>
-              <button id="btn-mode-bb4" class="btn-mode btn-mode-gems4">BLOCK GEMS 4</button>
-              <button id="btn-mode-bb5" class="btn-mode btn-mode-gems5">BLOCK GEMS 5</button>
-              <button id="btn-mode-bb6" class="btn-mode btn-mode-gems6">BLOCK GEMS 6</button>
+            <!-- Dynamic Mode Grid Container -->
+            <div id="dynamic-mode-grid" class="grid grid-cols-2 gap-3 w-full px-4 mt-[10px] mb-6 max-w-[320px]">
+              <!-- Dynamic buttons will be injected here -->
             </div>
           </div>
-          <button id="btn-how-to-play" class="btn-outline"
-            style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: auto; padding: 10px 32px; white-space: nowrap; min-width: 140px;">HOW
-            TO PLAY</button>
+          <button id="btn-how-to-play" class="btn-outline">HOW TO PLAY</button>
           <div id="combo-text-container"></div>
         </div>
 
@@ -795,13 +597,7 @@
       </div>
     </div>
 
-    <!-- Patch No-Moves Popup (compact toast before Game Over) -->
-    <div id="patch-no-moves-overlay">
-      <div class="patch-no-moves-popup">
-        <div class="patch-no-moves-title">NO MOVES LEFT</div>
-        <div class="patch-no-moves-sub">The board is too full...</div>
-      </div>
-    </div>
+
 
     <div id="game-over-overlay" class="overlay">
       <div id="game-over-box" class="modal-box neon-box w-full py-6 px-6 max-h-[90%]">
@@ -952,8 +748,7 @@
   </div>
 
   <div id="profile-modal" class="overlay">
-    <div id="profile-box" class="modal-box bg-[#0c1628]/95 border-blue-500/20 backdrop-blur-xl"
-      style="display: flex; flex-direction: column; padding: 1.25rem 1rem;">
+    <div id="profile-box" class="modal-box bg-[#0c1628]/95 border-blue-500/20 backdrop-blur-xl">
       <h2 class="text-white text-base font-black mb-1 shrink-0 text-center uppercase tracking-[0.4em]">Profile</h2>
 
       <!-- Profile Header (Wide) -->
@@ -1027,32 +822,7 @@
         <div class="bg-white/3 rounded-2xl border border-white/5 p-4 mb-6">
           <div class="text-[9px] text-gray-500 font-black uppercase tracking-widest mb-4 opacity-70 text-center">
             Performance Data</div>
-          <div class="profile-rows-grid">
-            <div class="profile-row-stat-item">
-              <div class="profile-row-stat-label">SINGLE</div>
-              <div id="stat-row-1" class="profile-row-stat-val">0</div>
-            </div>
-            <div class="profile-row-stat-item">
-              <div class="profile-row-stat-label">DUAL</div>
-              <div id="stat-row-2" class="profile-row-stat-val">0</div>
-            </div>
-            <div class="profile-row-stat-item">
-              <div class="profile-row-stat-label">TRIO</div>
-              <div id="stat-row-3" class="profile-row-stat-val">0</div>
-            </div>
-            <div class="profile-row-stat-item">
-              <div class="profile-row-stat-label">QUADRA</div>
-              <div id="stat-row-4" class="profile-row-stat-val">0</div>
-            </div>
-            <div class="profile-row-stat-item">
-              <div class="profile-row-stat-label">B-GEMS</div>
-              <div id="stat-row-5" class="profile-row-stat-val">0</div>
-            </div>
-            <div class="profile-row-stat-item border border-blue-500/20 bg-blue-500/5">
-              <div class="profile-row-stat-label text-blue-500/60">Playtime</div>
-              <div id="stat-total-playtime" class="profile-row-stat-val text-blue-400" style="font-size: 11px;">0h 0m
-              </div>
-            </div>
+          <div id="profile-stats-grid" class="profile-rows-grid">
           </div>
         </div>
 
@@ -1074,19 +844,17 @@
   </div>
 
   <div id="quests-modal" class="overlay">
-    <div id="missions-box" class="modal-box neon-box"
-      style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 1.5rem 1rem;">
+    <div id="missions-box" class="modal-box neon-box">
       <h2 class="text-yellow text-xl font-bold mb-4 shrink-0 text-center">DAILY MISSIONS</h2>
       <div id="quests-list" class="flex-1 overflow-y-auto w-full pr-2 flex flex-col gap-3 custom-scrollbar"></div>
       <div class="w-full shrink-0 pt-3 border-t border-white/5 mt-auto">
-        <button id="btn-close-quests" class="btn-ui w-full" style="margin: 0;">CLOSE</button>
+        <button id="btn-close-quests" class="btn-ui w-full">CLOSE</button>
       </div>
     </div>
   </div>
 
   <div id="settings-modal" class="overlay">
-    <div id="settings-box" class="modal-box neon-box"
-      style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 1.5rem 1rem;">
+    <div id="settings-box" class="modal-box neon-box">
       <h2 class="text-white text-xl font-bold mb-4 shrink-0 text-center uppercase tracking-widest">Options</h2>
 
       <div class="flex-1 overflow-y-auto w-full px-1 custom-scrollbar" style="margin-bottom: 0.5rem;">
@@ -1144,9 +912,6 @@
               Music Track</label>
             <select id="select-bgm"
               class="bg-slate-800/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] text-white focus:border-blue-500 outline-none w-full appearance-none">
-              <option value="bgm_main">Celestial Theme</option>
-              <option value="bgm_classic">Retro Classics</option>
-              <option value="bgm_chill">Night Runner (Chill)</option>
             </select>
           </div>
 
@@ -1208,13 +973,6 @@
       <div class="shrink-0 w-full max-w-full">
         <h2 class="text-blue-400 text-xl font-black mb-3 shrink-0 text-center uppercase tracking-widest">Rankings</h2>
         <div id="leaderboard-tabs" class="shop-tabs mb-4">
-          <button id="tab-lb-classic" class="tab-btn active">CLASSIC</button>
-          <button id="tab-lb-patch" class="tab-btn">PATCH</button>
-          <button id="tab-lb-drone" class="tab-btn">DRONE</button>
-          <button id="tab-lb-brick" class="tab-btn">BRICK</button>
-          <button id="tab-lb-adventure" class="tab-btn">ADVENTURE</button>
-          <button id="tab-lb-level" class="tab-btn">LEVEL</button>
-          <button id="tab-lb-collector" class="tab-btn">COLLECTOR</button>
         </div>
       </div>
 
@@ -1347,18 +1105,7 @@
     </div>
   </template>
 
-  <script>
-    function copyUID() {
-      const uidText = document.getElementById('profile-uid-val')?.innerText || '';
-      if (uidText && uidText !== '---') {
-        navigator.clipboard.writeText(uidText).then(() => {
-          alert('UID copied to clipboard!');
-        }).catch(err => {
-          console.error('Failed to copy: ', err);
-        });
-      }
-    }
-  </script>
+
 </body>
 
 </html>
