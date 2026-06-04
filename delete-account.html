@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Block Gems - Request Account Deletion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #020617;
+      --color-primary: #3b82f6;
+      --color-red: #ef4444;
+      --color-green: #10b981;
+      --font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background-color: var(--color-bg);
+      color: #f1f5f9;
+      font-family: var(--font-family);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      background-image: radial-gradient(circle at top, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+    }
+    
+    .container {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2.5rem 2rem;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(59, 130, 246, 0.1);
+    }
+    
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.4));
+    }
+    
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      background: linear-gradient(to right, #60a5fa, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+    
+    p.subtitle {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+    
+    .info-box {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 1rem;
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
+      color: #fca5a5;
+      line-height: 1.5;
+    }
+    
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+      padding-left: 0.25rem;
+    }
+    
+    input[type="text"], input[type="email"], textarea {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      color: #fff;
+      font-family: var(--font-family);
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    
+    input:focus, textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    }
+    
+    textarea {
+      height: 90px;
+      resize: none;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1.75rem;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+    
+    .checkbox-container {
+      position: relative;
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    
+    .checkbox-container input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 18px;
+      width: 18px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    
+    .checkbox-container input:checked ~ .checkmark {
+      background-color: var(--color-red);
+      border-color: var(--color-red);
+    }
+    
+    .checkmark::after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 6px;
+      top: 2px;
+      width: 4px;
+      height: 9px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    
+    .checkbox-container input:checked ~ .checkmark::after {
+      display: block;
+    }
+    
+    .checkbox-label {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+      user-select: none;
+    }
+    
+    .btn-submit {
+      width: 100%;
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--color-red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 0.9rem;
+      border-radius: 14px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    
+    .btn-submit:hover {
+      background: var(--color-red);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    .btn-submit:active {
+      transform: translateY(1px);
+    }
+    
+    .btn-submit:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    
+    .message {
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1.25rem;
+      font-size: 0.85rem;
+      display: none;
+      text-align: center;
+      line-height: 1.4;
+    }
+    
+    .message-success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #a7f3d0;
+      display: block;
+    }
+    
+    .message-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      display: block;
+    }
+  </style>
+  <script type="module" crossorigin src="./assets/deleteAccount-BvlVtOn9.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-Cf3xff8G.js">
+</head>
+<body>
+
+  <div class="container">
+    <div class="logo-container">
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="16" height="16" rx="3" fill="currentColor" opacity="0.9" />
+        <rect x="22" y="2" width="16" height="16" rx="3" fill="currentColor" opacity="0.6" />
+        <rect x="2" y="22" width="16" height="16" rx="3" fill="currentColor" opacity="0.6" />
+        <rect x="22" y="22" width="16" height="16" rx="3" fill="currentColor" opacity="0.9" />
+      </svg>
+      <h1>Block Gems</h1>
+      <p class="subtitle">Request Account & Data Deletion</p>
+    </div>
+    
+    <div id="status-message" class="message"></div>
+    
+    <div id="form-container">
+      <div class="info-box">
+        <strong>Warning:</strong> Deleting your account is permanent. All your highscores, game progression, purchased skins, coins, and profile details will be deleted from our cloud servers and cannot be recovered.
+      </div>
+      
+      <form id="deletion-form">
+        <div class="form-group">
+          <label for="input-name">Display Name / Nickname</label>
+          <input type="text" id="input-name" placeholder="e.g. Guest 4829 or PlayerOne" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="input-email">Registered Email Address</label>
+          <input type="email" id="input-email" placeholder="e.g. yourname@example.com" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="input-reason">Reason for deletion (Optional)</label>
+          <textarea id="input-reason" placeholder="Please let us know how we can improve..."></textarea>
+        </div>
+        
+        <div class="checkbox-group" id="checkbox-trigger">
+          <div class="checkbox-container">
+            <input type="checkbox" id="confirm-check" required>
+            <span class="checkmark"></span>
+          </div>
+          <span class="checkbox-label">
+            I understand that my account and all associated data will be permanently deleted and cannot be recovered.
+          </span>
+        </div>
+        
+        <button type="submit" id="btn-submit" class="btn-submit">Request Deletion</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
