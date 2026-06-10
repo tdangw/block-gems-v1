@@ -92,11 +92,11 @@
       letter-spacing: 0.2em;
     }
   </style>
-  <script type="module" crossorigin src="./assets/main-BSwZNtt4.js"></script>
+  <script type="module" crossorigin src="./assets/main-Cn0uQmHh.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-ciTZEWaI.js">
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-Cf3xff8G.js">
   <link rel="modulepreload" crossorigin href="./assets/phaser-CbAfvrCo.js">
-  <link rel="stylesheet" crossorigin href="./assets/main-CRruCt2I.css">
+  <link rel="stylesheet" crossorigin href="./assets/main-B-xjP8Bt.css">
 </head>
 
 <body class="bg-black text-white font-['Plus_Jakarta_Sans'] overflow-hidden select-none">
@@ -240,6 +240,8 @@
 
 
   <div id="app-root">
+    <!-- Board-scoped Fever Fire Effect (replaces full-screen flash) -->
+    <div id="fever-board-fire" class="fever-board-fire"></div>
 
     <!-- Notification Container -->
     <div id="notification-container" class="notification-container"></div>
@@ -306,6 +308,21 @@
           <div id="gift-menu-container" class="gift-menu-container">
             <img src="./assets/images/gift_box.png" class="gift-menu-icon" alt="Gift">
             <span id="gift-menu-status" class="gift-menu-label">--:--:--</span>
+          </div>
+
+          <!-- 7-Day Login Streak Box -->
+          <div id="streak-menu-container" class="streak-menu-container">
+            <div class="streak-menu-icon-wrapper">
+              <svg class="streak-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+                <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"></path>
+              </svg>
+              <div id="streak-notification-badge" class="streak-badge hidden"></div>
+            </div>
+            <span id="streak-menu-label" class="streak-menu-label">7-DAY SIGN-IN</span>
           </div>
 
           <!-- Gift Claim Animation Overlay (Fixed center) -->
@@ -969,6 +986,30 @@
 
   <div id="inventory-modal" class="overlay">
     <!-- Inventory content injected by StoreManager -->
+  </div>
+
+  <!-- 7-Day Attendance Modal -->
+  <div id="checkin-modal" class="overlay board-overlay">
+    <div id="checkin-box" class="modal-box neon-box card flex flex-col p-4 px-2.5">
+      <h2 class="text-white text-base font-black uppercase tracking-widest text-shadow-neon text-center mb-1 shrink-0">7-Day Rewards</h2>
+      <p class="text-[9px] text-slate-400 font-bold tracking-wider text-center uppercase mb-4 shrink-0">Check in daily and keep the rewards flowing</p>
+
+      <!-- Grid: day 1-4 top row, day 5-6 second row, day 7 full width -->
+      <div id="checkin-grid" class="w-full shrink-0">
+        <!-- Dynamically rendered by UIOrchestrator -->
+      </div>
+
+      <!-- Bottom buttons -->
+      <div class="w-full shrink-0 flex flex-col gap-2 pt-3 border-t border-white/5 mt-3">
+        <!-- Nút x2 Ad: chỉ hiện sau khi claim -->
+        <button id="btn-claim-streak-x2" class="w-full py-2.5 rounded-xl font-black text-xs tracking-widest uppercase transition-all duration-200 flex items-center justify-center gap-2 border streak-ad-dimmed"
+          style="background:rgba(251,191,36,0.12); border-color:rgba(251,191,36,0.4); color:#fbbf24;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:4px"><rect x="2" y="7" width="15" height="11" rx="2"/><path d="M17 9.5l5-3v11l-5-3V9.5z"/></svg>
+          WATCH AD — GET BONUS
+        </button>
+        <button id="btn-close-checkin" class="btn-ui w-full hover:bg-red-500/10 hover:text-red-400 transition-all font-bold m-0">CLOSE</button>
+      </div>
+    </div>
   </div>
 
   <div id="tutorial-modal" class="overlay">
