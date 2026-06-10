@@ -92,11 +92,11 @@
       letter-spacing: 0.2em;
     }
   </style>
-  <script type="module" crossorigin src="./assets/main-Cn0uQmHh.js"></script>
+  <script type="module" crossorigin src="./assets/main-CYt0eIh_.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-ciTZEWaI.js">
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-Cf3xff8G.js">
   <link rel="modulepreload" crossorigin href="./assets/phaser-CbAfvrCo.js">
-  <link rel="stylesheet" crossorigin href="./assets/main-B-xjP8Bt.css">
+  <link rel="stylesheet" crossorigin href="./assets/main-plEK8i7a.css">
 </head>
 
 <body class="bg-black text-white font-['Plus_Jakarta_Sans'] overflow-hidden select-none">
@@ -990,17 +990,21 @@
 
   <!-- 7-Day Attendance Modal -->
   <div id="checkin-modal" class="overlay board-overlay">
-    <div id="checkin-box" class="modal-box neon-box card flex flex-col p-4 px-2.5">
+    <div id="checkin-box" class="modal-box neon-box card flex flex-col p-3 px-2.5">
       <h2 class="text-white text-base font-black uppercase tracking-widest text-shadow-neon text-center mb-1 shrink-0">7-Day Rewards</h2>
-      <p class="text-[9px] text-slate-400 font-bold tracking-wider text-center uppercase mb-4 shrink-0">Check in daily and keep the rewards flowing</p>
+      <p class="text-[9px] text-slate-400 font-bold tracking-wider text-center uppercase mb-2 shrink-0">Check in daily and keep the rewards flowing</p>
 
       <!-- Grid: day 1-4 top row, day 5-6 second row, day 7 full width -->
       <div id="checkin-grid" class="w-full shrink-0">
         <!-- Dynamically rendered by UIOrchestrator -->
       </div>
 
+      <div id="checkin-milestone-boxes" class="w-full shrink-0 mt-2">
+        <!-- Dynamically rendered by UIOrchestrator -->
+      </div>
+
       <!-- Bottom buttons -->
-      <div class="w-full shrink-0 flex flex-col gap-2 pt-3 border-t border-white/5 mt-3">
+      <div class="w-full shrink-0 flex flex-col gap-2 pt-2 border-t border-white/5 mt-2">
         <!-- Nút x2 Ad: chỉ hiện sau khi claim -->
         <button id="btn-claim-streak-x2" class="w-full py-2.5 rounded-xl font-black text-xs tracking-widest uppercase transition-all duration-200 flex items-center justify-center gap-2 border streak-ad-dimmed"
           style="background:rgba(251,191,36,0.12); border-color:rgba(251,191,36,0.4); color:#fbbf24;">
