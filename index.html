@@ -13,13 +13,11 @@
     .overlay {
       visibility: hidden;
       opacity: 0;
-      transform: translateY(-100%);
     }
 
     .overlay.active {
       visibility: visible;
       opacity: 1;
-      transform: translateY(0);
     }
 
     /* --- LOADING SCREEN --- */
@@ -92,12 +90,12 @@
       letter-spacing: 0.2em;
     }
   </style>
-  <script type="module" crossorigin src="./assets/main-BiO-fi3d.js"></script>
+  <script type="module" crossorigin src="./assets/main-BEKXrESF.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-CpWojdLp.js">
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-Cf3xff8G.js">
   <link rel="modulepreload" crossorigin href="./assets/dist-DPijVefw.js">
   <link rel="modulepreload" crossorigin href="./assets/phaser-CPZYWpPu.js">
-  <link rel="stylesheet" crossorigin href="./assets/main-plEK8i7a.css">
+  <link rel="stylesheet" crossorigin href="./assets/main-cFU342k_.css">
 </head>
 
 <body class="bg-black text-white font-['Plus_Jakarta_Sans'] overflow-hidden select-none">
@@ -311,10 +309,11 @@
             <span id="gift-menu-status" class="gift-menu-label">--:--:--</span>
           </div>
 
-          <!-- 7-Day Login Streak Box -->
+          <!-- Login Streak Box -->
           <div id="streak-menu-container" class="streak-menu-container">
             <div class="streak-menu-icon-wrapper">
-              <svg class="streak-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="streak-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="16" y1="2" x2="16" y2="6"></line>
                 <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -323,7 +322,7 @@
               </svg>
               <div id="streak-notification-badge" class="streak-badge hidden"></div>
             </div>
-            <span id="streak-menu-label" class="streak-menu-label">7-DAY SIGN-IN</span>
+            <span id="streak-menu-label" class="streak-menu-label">Login Rewards</span>
           </div>
 
           <!-- Gift Claim Animation Overlay (Fixed center) -->
@@ -474,7 +473,8 @@
                 </div>
               </div>
               <button id="btn-resume" class="btn-ui btn-blue-neon !py-3.5 mb-1 shrink-0">RESUME</button>
-              <button id="btn-give-up" class="btn-ui btn-red-dim !py-3.5 mb-1 shrink-0" style="display: none;">GIVE UP</button>
+              <button id="btn-give-up" class="btn-ui btn-red-dim !py-3.5 mb-1 shrink-0" style="display: none;">GIVE
+                UP</button>
               <button id="btn-shop-menu" class="btn-ui btn-orange-neon !py-3.5 mb-1 shrink-0">SHOP</button>
               <button id="btn-quests-menu" class="btn-ui btn-blue-alt-neon !py-3.5 mb-1 shrink-0">MISSIONS</button>
               <button id="btn-settings" class="btn-ui btn-green-neon !py-3.5 mb-1 shrink-0">OPTIONS</button>
@@ -652,10 +652,14 @@
 
         <!-- Double Rewards Ad Reward -->
         <div id="double-rewards-container" class="flex gap-2 w-full mt-4 shrink-0">
-          <button id="btn-double-coins-gameover" class="btn-ui btn-orange-neon flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5" style="margin: 0; white-space: nowrap; font-size: 8.5px; letter-spacing: 0.04em; padding-left: 2px; padding-right: 2px;">
+          <button id="btn-double-coins-gameover"
+            class="btn-ui btn-orange-neon flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5"
+            style="margin: 0; white-space: nowrap; font-size: 8.5px; letter-spacing: 0.04em; padding-left: 2px; padding-right: 2px;">
             DOUBLE COINS (AD)
           </button>
-          <button id="btn-double-xp-gameover" class="btn-ui btn-green-neon flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5" style="margin: 0; white-space: nowrap; font-size: 8.5px; letter-spacing: 0.04em; padding-left: 2px; padding-right: 2px;">
+          <button id="btn-double-xp-gameover"
+            class="btn-ui btn-green-neon flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5"
+            style="margin: 0; white-space: nowrap; font-size: 8.5px; letter-spacing: 0.04em; padding-left: 2px; padding-right: 2px;">
             DOUBLE XP (AD)
           </button>
         </div>
@@ -989,30 +993,39 @@
     <!-- Inventory content injected by StoreManager -->
   </div>
 
-  <!-- 7-Day Attendance Modal -->
+  <!-- 14-Day Attendance Modal -->
   <div id="checkin-modal" class="overlay board-overlay">
     <div id="checkin-box" class="modal-box neon-box card flex flex-col p-3 px-2.5">
-      <h2 class="text-white text-base font-black uppercase tracking-widest text-shadow-neon text-center mb-1 shrink-0">7-Day Rewards</h2>
-      <p class="text-[9px] text-slate-400 font-bold tracking-wider text-center uppercase mb-2 shrink-0">Check in daily and keep the rewards flowing</p>
+      <h2 class="text-white text-base font-black uppercase tracking-widest text-shadow-neon text-center mb-1 shrink-0">
+        14-Day Rewards</h2>
+      <p class="text-[9px] text-slate-400 font-bold tracking-wider text-center uppercase mb-2 shrink-0">Check in daily
+        and keep the rewards flowing</p>
 
-      <!-- Grid: day 1-4 top row, day 5-6 second row, day 7 full width -->
-      <div id="checkin-grid" class="w-full shrink-0">
-        <!-- Dynamically rendered by UIOrchestrator -->
-      </div>
+      <div id="checkin-scroll" class="checkin-scroll custom-scrollbar">
+        <div id="checkin-grid" class="w-full shrink-0">
+          <!-- Dynamically rendered by UIOrchestrator -->
+        </div>
 
-      <div id="checkin-milestone-boxes" class="w-full shrink-0 mt-2">
-        <!-- Dynamically rendered by UIOrchestrator -->
+        <div id="checkin-milestone-boxes" class="w-full shrink-0 mt-2">
+          <!-- Dynamically rendered by UIOrchestrator -->
+        </div>
       </div>
 
       <!-- Bottom buttons -->
-      <div class="w-full shrink-0 flex flex-col gap-2 pt-2 border-t border-white/5 mt-2">
+      <div id="checkin-actions" class="w-full shrink-0 flex flex-col gap-2 pt-2 border-t border-white/5 mt-2">
         <!-- Nút x2 Ad: chỉ hiện sau khi claim -->
-        <button id="btn-claim-streak-x2" class="w-full py-2.5 rounded-xl font-black text-xs tracking-widest uppercase transition-all duration-200 flex items-center justify-center gap-2 border streak-ad-dimmed"
+        <button id="btn-claim-streak-x2"
+          class="w-full py-2.5 rounded-xl font-black text-xs tracking-widest uppercase transition-all duration-200 flex items-center justify-center gap-2 border streak-ad-dimmed"
           style="background:rgba(251,191,36,0.12); border-color:rgba(251,191,36,0.4); color:#fbbf24;">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:4px"><rect x="2" y="7" width="15" height="11" rx="2"/><path d="M17 9.5l5-3v11l-5-3V9.5z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"
+            style="display:inline;vertical-align:middle;margin-right:4px">
+            <rect x="2" y="7" width="15" height="11" rx="2" />
+            <path d="M17 9.5l5-3v11l-5-3V9.5z" />
+          </svg>
           WATCH AD — GET BONUS
         </button>
-        <button id="btn-close-checkin" class="btn-ui w-full hover:bg-red-500/10 hover:text-red-400 transition-all font-bold m-0">CLOSE</button>
+        <button id="btn-close-checkin"
+          class="btn-ui w-full hover:bg-red-500/10 hover:text-red-400 transition-all font-bold m-0">CLOSE</button>
       </div>
     </div>
   </div>
