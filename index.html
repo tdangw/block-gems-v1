@@ -90,12 +90,12 @@
       letter-spacing: 0.2em;
     }
   </style>
-  <script type="module" crossorigin src="./assets/main-BfE_wnGB.js"></script>
+  <script type="module" crossorigin src="./assets/main-Bnf9AFZd.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-CpWojdLp.js">
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-Cf3xff8G.js">
   <link rel="modulepreload" crossorigin href="./assets/dist-DPijVefw.js">
   <link rel="modulepreload" crossorigin href="./assets/phaser-CPZYWpPu.js">
-  <link rel="stylesheet" crossorigin href="./assets/main-CnRRTtxm.css">
+  <link rel="stylesheet" crossorigin href="./assets/main-DrcIkdKx.css">
 </head>
 
 <body class="bg-black text-white font-['Plus_Jakarta_Sans'] overflow-hidden select-none">
@@ -605,11 +605,56 @@
 
     <!-- Overlays (Moved outside ui-center for direct board alignment) -->
     <div id="stage-clear-overlay" class="overlay">
-      <div class="modal-box neon-box text-center w-[24rem] py-10 px-7 border-amber-500/50">
-        <h2 class="text-yellow text-2xl font-black mb-1 uppercase tracking-widest">STAGE CLEAR!</h2>
-        <p id="stage-clear-num" class="text-amber-300 text-sm font-bold mb-4"></p>
-        <div id="stage-clear-stats" class="w-full text-left mb-6 space-y-1"></div>
-        <div class="flex gap-2 w-full">
+      <div id="stage-clear-box" class="modal-box neon-box w-full py-6 px-6 max-h-[90%] border-amber-500/50">
+        <h2 class="text-yellow text-3xl font-black mb-1 drop-shadow-lg text-center uppercase">STAGE CLEAR</h2>
+        <p id="stage-clear-num" class="text-amber-300 text-sm font-bold mb-1 text-center uppercase"></p>
+        <div id="stage-clear-score" class="final-score-highlight">0</div>
+
+        <div class="game-over-stats-grid mb-5">
+          <div class="game-over-stat-card">
+            <span class="text-[9px] text-blue-400 font-black uppercase tracking-widest opacity-60">XP Gained</span>
+            <span id="stage-clear-xp-earned" class="text-lg font-black xp-value">0</span>
+          </div>
+          <div class="game-over-stat-card">
+            <span class="text-[9px] text-yellow font-black uppercase tracking-widest opacity-60">Coins Gained</span>
+            <div class="flex items-center gap-1.5">
+              <span class="currency-icon coin-icon m-0">B</span>
+              <span id="stage-clear-coins-val" class="text-lg font-black coin-value">0</span>
+            </div>
+          </div>
+          <div class="game-over-stat-card">
+            <span class="text-[9px] text-amber-300 font-black uppercase tracking-widest opacity-60">Max Combo</span>
+            <span id="stage-clear-max-combo-val" class="text-lg font-black text-white">x0</span>
+          </div>
+          <div class="game-over-stat-card">
+            <span class="text-[9px] text-yellow font-black uppercase tracking-widest opacity-60">Gems</span>
+            <span id="stage-clear-gems-val" class="text-lg font-black text-yellow">0</span>
+          </div>
+          <div class="game-over-stat-card col-span-2">
+            <span class="text-[9px] text-white font-black uppercase tracking-widest opacity-60">Best Score</span>
+            <div class="flex items-center gap-2">
+              <svg width="16" height="16" class="text-yellow">
+                <use xlink:href="#icon-trophy"></use>
+              </svg>
+              <span id="stage-clear-best-score-val" class="text-lg font-black">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="stage-clear-double-rewards-container" class="flex gap-2 w-full mt-4 shrink-0">
+          <button id="btn-double-coins-stage-clear"
+            class="btn-ui btn-orange-neon flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5"
+            style="margin: 0; white-space: nowrap; font-size: 8.5px; letter-spacing: 0.04em; padding-left: 2px; padding-right: 2px;">
+            DOUBLE COINS (AD)
+          </button>
+          <button id="btn-double-xp-stage-clear"
+            class="btn-ui btn-green-neon flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5"
+            style="margin: 0; white-space: nowrap; font-size: 8.5px; letter-spacing: 0.04em; padding-left: 2px; padding-right: 2px;">
+            DOUBLE XP (AD)
+          </button>
+        </div>
+
+        <div class="flex gap-2 w-full mt-2.5 shrink-0">
           <button id="btn-stage-menu" class="btn-ui btn-red-dim flex-1">MENU</button>
           <button id="btn-next-stage" class="btn-ui btn-orange-neon flex-1">NEXT STAGE</button>
         </div>
