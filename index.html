@@ -91,11 +91,11 @@
       letter-spacing: 0.2em;
     }
   </style>
-  <script type="module" crossorigin src="./assets/main-BJGXDiKE.js"></script>
+  <script type="module" crossorigin src="./assets/main-CE1x-CfL.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-Zofljcph.js">
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-CSRv37U6.js">
   <link rel="modulepreload" crossorigin href="./assets/phaser-93QsA6HH.js">
-  <link rel="stylesheet" crossorigin href="./assets/main-Du1xoLwq.css">
+  <link rel="stylesheet" crossorigin href="./assets/main-DL2aPkK1.css">
 </head>
 
 <body class="bg-black text-white font-['Plus_Jakarta_Sans'] overflow-hidden select-none">
@@ -1190,7 +1190,19 @@
   <div id="message-modal" class="overlay">
     <div class="modal-box neon-box !max-w-[320px] !p-8 text-center">
       <h3 id="msg-modal-title" class="text-xl font-black mb-4 tracking-widest text-blue-400 uppercase">TITLE</h3>
-      <p id="msg-modal-body" class="text-sm text-slate-400 leading-relaxed mb-8">Message body goes here...</p>
+      <p id="msg-modal-body" class="text-sm text-slate-400 leading-relaxed mb-6">Message body goes here...</p>
+      <div id="msg-modal-text-confirm" class="hidden w-full mb-6 text-left">
+        <p id="msg-modal-text-confirm-label" class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">
+          Type the required word to confirm.
+        </p>
+        <input
+          id="msg-modal-text-confirm-input"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          class="w-full bg-black/40 border border-red-500/30 rounded-lg p-3 text-sm text-white text-center font-black tracking-widest outline-none focus:border-red-400"
+        >
+      </div>
       <div id="msg-modal-actions" class="flex gap-3 w-full">
         <button id="msg-modal-cancel" class="btn-action-neon flex-1 py-3 m-0 hidden">CANCEL</button>
         <button id="msg-modal-close" class="btn-action-neon flex-1 py-3 m-0">OK</button>
