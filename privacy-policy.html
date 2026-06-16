@@ -130,6 +130,28 @@
       text-align: center;
     }
 
+    .legal-tail {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(34px, 1fr));
+      gap: 0.75rem;
+      margin-top: 2rem;
+      padding: 1.35rem 1rem 1.9rem;
+      border: 1px solid rgba(59, 130, 246, 0.12);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(34, 211, 238, 0.18), transparent 28%),
+        radial-gradient(circle at 82% 70%, rgba(168, 85, 247, 0.16), transparent 34%),
+        linear-gradient(135deg, rgba(15, 23, 42, 0.42), rgba(2, 6, 23, 0.3));
+    }
+
+    .legal-tail span {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(96, 165, 250, 0.22), rgba(14, 165, 233, 0.08));
+      border: 1px solid rgba(147, 197, 253, 0.16);
+      box-shadow: inset 0 0 18px rgba(59, 130, 246, 0.08);
+    }
+
     @media (max-width: 560px) {
       body {
         padding: 1rem;
@@ -138,6 +160,11 @@
       .container {
         border-radius: 18px;
         padding: 2rem 1.25rem;
+      }
+
+      .legal-tail {
+        margin-top: 1.5rem;
+        padding-bottom: 5.5rem;
       }
     }
   </style>
@@ -276,6 +303,9 @@
     <div class="footer-links">
       <a href="./delete-account.html">Request Account Deletion</a>
       <a href="mailto:dangvt.studio@gmail.com">Contact Support</a>
+    </div>
+    <div class="legal-tail" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
     </div>
   </main>
 </body>
