@@ -91,7 +91,7 @@
       letter-spacing: 0.2em;
     }
   </style>
-  <script type="module" crossorigin src="./assets/main-DivH62Ny.js"></script>
+  <script type="module" crossorigin src="./assets/main-BqL5oDcG.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-Zofljcph.js">
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-CSRv37U6.js">
   <link rel="modulepreload" crossorigin href="./assets/phaser-93QsA6HH.js">
@@ -934,13 +934,13 @@
 
   <div id="settings-modal" class="overlay">
     <div id="settings-box" class="modal-box neon-box">
-      <h2 class="text-white text-xl font-bold mb-4 shrink-0 text-center uppercase tracking-widest">Options</h2>
+      <h2 data-i18n="settings.title" class="text-white text-xl font-bold mb-4 shrink-0 text-center uppercase tracking-widest">Options</h2>
 
       <div class="flex-1 overflow-y-auto w-full px-1 custom-scrollbar" style="margin-bottom: 0.5rem;">
         <div class="flex flex-col gap-5 w-full">
           <!-- Sound Control -->
           <div class="flex items-center w-full gap-4">
-            <span class="text-gray-200 text-[11px] font-bold w-12 shrink-0">Sound</span>
+            <span data-i18n="settings.sound" class="text-gray-200 text-[11px] font-bold w-12 shrink-0">Sound</span>
             <input type="range" id="slider-sfx-volume" min="0" max="1" step="0.1" value="1" class="custom-slider grow">
             <div class="flex items-center justify-center shrink-0 w-10">
               <span id="sfx-status" class="text-[10px] font-black text-cyan-400">ON</span>
@@ -949,7 +949,7 @@
 
           <!-- Music Control -->
           <div class="flex items-center w-full gap-4">
-            <span class="text-gray-200 text-[11px] font-bold w-12 shrink-0">Music</span>
+            <span data-i18n="settings.music" class="text-gray-200 text-[11px] font-bold w-12 shrink-0">Music</span>
             <input type="range" id="slider-music-volume" min="0" max="1" step="0.1" value="0.7"
               class="custom-slider grow">
             <div class="flex items-center justify-center shrink-0 w-10">
@@ -962,7 +962,7 @@
           <div class="w-full">
             <div
               class="flex justify-between items-center bg-white/5 p-2.5 px-3 rounded-xl border border-white/5 hover:bg-white/10 transition-all cursor-pointer">
-              <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Smart Drop</span>
+              <span data-i18n="settings.smartDrop" class="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Smart Drop</span>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" id="toggle-smart-drop" class="sr-only peer" checked>
                 <div
@@ -975,7 +975,7 @@
           <div class="w-full">
             <div
               class="flex justify-between items-center bg-white/5 p-2.5 px-3 rounded-xl border border-white/5 hover:bg-white/10 transition-all cursor-pointer">
-              <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Vibration</span>
+              <span data-i18n="settings.vibration" class="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Vibration</span>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" id="toggle-vibration" class="sr-only peer" checked>
                 <div
@@ -985,9 +985,19 @@
             </div>
           </div>
 
+          <div class="flex flex-col gap-2">
+            <label for="select-language" data-i18n="settings.language"
+              class="text-gray-500 text-[9px] font-black uppercase tracking-widest pl-0.5 opacity-80">Language</label>
+            <select id="select-language"
+              class="bg-slate-800/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] text-white focus:border-blue-500 outline-none w-full appearance-none">
+              <option value="en">English</option>
+              <option value="vi">Tiếng Việt</option>
+            </select>
+          </div>
+
           <!-- Music Selector -->
           <div class="flex flex-col gap-2">
-            <label class="text-gray-500 text-[9px] font-black uppercase tracking-widest pl-0.5 opacity-80">Background
+            <label data-i18n="settings.backgroundMusic" class="text-gray-500 text-[9px] font-black uppercase tracking-widest pl-0.5 opacity-80">Background
               Music Track</label>
             <select id="select-bgm"
               class="bg-slate-800/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] text-white focus:border-blue-500 outline-none w-full appearance-none">
@@ -997,17 +1007,17 @@
           <a id="btn-privacy-policy" href="./privacy-policy.html" target="_blank" rel="noopener"
             class="btn-ui btn-blue-alt-neon w-full text-center"
             style="padding: 12px 0; font-size: 10px; text-decoration: none;">
-            PRIVACY POLICY
+            <span data-i18n="settings.privacyPolicy">PRIVACY POLICY</span>
           </a>
 
           <button id="btn-privacy-options" class="btn-ui btn-blue-alt-neon w-full"
             style="padding: 12px 0; font-size: 10px; margin-top: 10px;">
-            AD CONSENT OPTIONS
+            <span data-i18n="settings.adConsent">AD CONSENT OPTIONS</span>
           </button>
 
           <button id="btn-delete-account" class="btn-ui btn-red-dim w-full"
             style="padding: 12px 0; font-size: 10px; margin-top: 10px;">
-            DELETE ACCOUNT
+            <span data-i18n="settings.deleteAccount">DELETE ACCOUNT</span>
           </button>
 
           <!-- Framed UID -->
@@ -1031,7 +1041,7 @@
 
       <div class="w-full shrink-0 flex flex-col items-center gap-1.5 pt-3 border-t border-white/5">
         <span class="text-[9px] text-gray-600 font-black tracking-[0.3em] uppercase opacity-60">Version V1.01a</span>
-        <button id="btn-close-settings"
+        <button id="btn-close-settings" data-i18n="common.close"
           class="btn-ui w-full hover:bg-red-500/10 hover:text-red-400 transition-all font-bold m-0">CLOSE</button>
       </div>
     </div>
