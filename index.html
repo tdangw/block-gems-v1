@@ -91,11 +91,15 @@
       letter-spacing: 0.2em;
     }
   </style>
-  <script type="module" crossorigin src="./assets/main-CXlvSoST.js"></script>
+  <script type="module" crossorigin src="./assets/main-BzbSGB8P.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-Zofljcph.js">
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-CSRv37U6.js">
+  <link rel="modulepreload" crossorigin href="./assets/dist-dCQyYRQw.js">
   <link rel="modulepreload" crossorigin href="./assets/phaser-93QsA6HH.js">
-  <link rel="stylesheet" crossorigin href="./assets/main-gZ_hWAVl.css">
+  <link rel="modulepreload" crossorigin href="./assets/ProfileService-Tz9jcJ2Z.js">
+  <link rel="modulepreload" crossorigin href="./assets/IGameMode-DzOCU6Dc.js">
+  <link rel="modulepreload" crossorigin href="./assets/PopupUIController-BV3qYdQH.js">
+  <link rel="stylesheet" crossorigin href="./assets/main-D1R6CLil.css">
 </head>
 
 <body class="bg-black text-white font-['Plus_Jakarta_Sans'] overflow-hidden select-none">
@@ -939,22 +943,32 @@
       <div class="flex-1 overflow-y-auto w-full px-1 custom-scrollbar" style="margin-bottom: 0.5rem;">
         <div class="flex flex-col gap-5 w-full">
           <!-- Sound Control -->
-          <div class="flex items-center w-full gap-4">
-            <span data-i18n="settings.sound" class="text-gray-200 text-[11px] font-bold w-12 shrink-0">Sound</span>
-            <input type="range" id="slider-sfx-volume" min="0" max="1" step="0.1" value="1" class="custom-slider grow">
-            <div class="flex items-center justify-center shrink-0 w-10">
-              <span id="sfx-status" class="text-[10px] font-black text-cyan-400">ON</span>
+          <div class="flex flex-col w-full gap-2">
+            <div class="relative flex items-center justify-center min-h-5 px-1">
+              <span data-i18n="settings.sound" class="text-gray-200 text-[11px] font-bold text-center uppercase tracking-wider">Sound</span>
+              <label class="absolute right-1 inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="toggle-sfx" class="sr-only peer" checked>
+                <div
+                  class="w-8 h-4.5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-blue-500">
+                </div>
+              </label>
             </div>
+            <input type="range" id="slider-sfx-volume" min="0" max="1" step="0.1" value="1" class="custom-slider w-full">
           </div>
 
           <!-- Music Control -->
-          <div class="flex items-center w-full gap-4">
-            <span data-i18n="settings.music" class="text-gray-200 text-[11px] font-bold w-12 shrink-0">Music</span>
-            <input type="range" id="slider-music-volume" min="0" max="1" step="0.1" value="0.7"
-              class="custom-slider grow">
-            <div class="flex items-center justify-center shrink-0 w-10">
-              <span id="music-status" class="text-[10px] font-black text-cyan-400">ON</span>
+          <div class="flex flex-col w-full gap-2">
+            <div class="relative flex items-center justify-center min-h-5 px-1">
+              <span data-i18n="settings.music" class="text-gray-200 text-[11px] font-bold text-center uppercase tracking-wider">Music</span>
+              <label class="absolute right-1 inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="toggle-music" class="sr-only peer" checked>
+                <div
+                  class="w-8 h-4.5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-blue-500">
+                </div>
+              </label>
             </div>
+            <input type="range" id="slider-music-volume" min="0" max="1" step="0.1" value="0.7"
+              class="custom-slider w-full">
           </div>
 
           <div class="divider my-1 opacity-5"></div>
@@ -1040,7 +1054,7 @@
       </div>
 
       <div class="w-full shrink-0 flex flex-col items-center gap-1.5 pt-3 border-t border-white/5">
-        <span class="text-[9px] text-gray-600 font-black tracking-[0.3em] uppercase opacity-60">Version V1.01a</span>
+        <span class="text-[9px] text-gray-600 font-black tracking-[0.3em] uppercase opacity-60">Version V1.01a-1112</span>
         <button id="btn-close-settings" data-i18n="common.close"
           class="btn-ui w-full hover:bg-red-500/10 hover:text-red-400 transition-all font-bold m-0">CLOSE</button>
       </div>
