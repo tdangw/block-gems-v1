@@ -91,15 +91,15 @@
       letter-spacing: 0.2em;
     }
   </style>
-  <script type="module" crossorigin src="./assets/main-DK4urv_U.js"></script>
+  <script type="module" crossorigin src="./assets/main-CwLFbw1_.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-Zofljcph.js">
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-CSRv37U6.js">
   <link rel="modulepreload" crossorigin href="./assets/dist-dCQyYRQw.js">
   <link rel="modulepreload" crossorigin href="./assets/phaser-93QsA6HH.js">
-  <link rel="modulepreload" crossorigin href="./assets/ProfileService-Tz9jcJ2Z.js">
-  <link rel="modulepreload" crossorigin href="./assets/IGameMode-DzOCU6Dc.js">
-  <link rel="modulepreload" crossorigin href="./assets/PopupUIController-BV3qYdQH.js">
-  <link rel="stylesheet" crossorigin href="./assets/main-D1R6CLil.css">
+  <link rel="modulepreload" crossorigin href="./assets/ProfileService-pNlcYrnM.js">
+  <link rel="modulepreload" crossorigin href="./assets/IGameMode-BnO9yvhz.js">
+  <link rel="modulepreload" crossorigin href="./assets/PopupUIController-dOcGx69c.js">
+  <link rel="stylesheet" crossorigin href="./assets/main-HXE_9D_1.css">
 </head>
 
 <body class="bg-black text-white font-['Plus_Jakarta_Sans'] overflow-hidden select-none">
@@ -307,10 +307,14 @@
       <!-- Cột GIỮA -->
       <div id="ui-center">
         <div id="start-overlay" class="overlay active">
+          <div id="main-menu-feature-bar" class="main-menu-feature-bar">
           <!-- Daily Gift Box (Moved inside start-overlay to hide during Auth) -->
           <div id="gift-menu-container" class="gift-menu-container">
-            <img src="./assets/images/gift_box.png" class="gift-menu-icon" alt="Gift">
-            <span id="gift-menu-status" class="gift-menu-label">--:--:--</span>
+            <span class="gift-menu-icon-wrapper">
+              <img src="./assets/images/gift_box.png" class="gift-menu-icon" alt="Gift Box">
+              <span id="gift-notification-badge" class="menu-notification-dot hidden" aria-hidden="true"></span>
+            </span>
+            <span id="gift-menu-status" class="gift-menu-label">Gift Box</span>
           </div>
 
           <!-- Login Streak Box -->
@@ -327,6 +331,7 @@
               <div id="streak-notification-badge" class="streak-badge hidden"></div>
             </div>
             <span id="streak-menu-label" class="streak-menu-label">Login Rewards</span>
+          </div>
           </div>
 
           <!-- Gift Claim Animation Overlay (Fixed center) -->
